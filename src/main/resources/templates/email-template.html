@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmls:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <h2>Recuperación de contraseña</h2>
+   <h3><span>Hola, </span><span th:text="${nombreUsuario}"></span></h3>
+   <h4>Para recuperar tu contraseña, por favor haz click en el siguiente enlace</h4>
+   <a th:href = "@{${url}}"><button>Haz click Aquí</button></a>
+</body>
+</html>

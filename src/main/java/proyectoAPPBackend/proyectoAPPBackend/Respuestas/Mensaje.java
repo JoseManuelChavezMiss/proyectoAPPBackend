@@ -7,7 +7,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Mensaje {
-
-    private String mensaje;
-    
+    private String mensaje; 
 }

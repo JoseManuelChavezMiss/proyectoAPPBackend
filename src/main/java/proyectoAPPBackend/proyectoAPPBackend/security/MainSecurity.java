@@ -47,7 +47,7 @@ public class MainSecurity {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeHttpRequests().requestMatchers("/auth/**",
-                "/email-password/**",
+                "/email/**",
                 "/v2/api-docs/**",
                 "/swagger-ui/**",
                 "/swagger-resources/**",

@@ -48,6 +48,10 @@ public class MainSecurity {
 
         http.authorizeHttpRequests().requestMatchers("/auth/**",
                 "/email/**",
+                "/chat-websocket/**",
+                "/chat-socket/**",
+                "/coordenadas/**",
+                "/topic/**",
                 "/v2/api-docs/**",
                 "/swagger-ui/**",
                 "/swagger-resources/**",

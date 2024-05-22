@@ -15,7 +15,7 @@ import java.text.ParseException;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin
+@CrossOrigin( origins = "https://api.aguasanta.store/")
 public class AuthController {
 
     @Autowired

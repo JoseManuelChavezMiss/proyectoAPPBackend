@@ -9,6 +9,7 @@ public class Coordenadas {
 
     String latitud;
     String longitud;
+    String idRepartidor;
 
     
 }

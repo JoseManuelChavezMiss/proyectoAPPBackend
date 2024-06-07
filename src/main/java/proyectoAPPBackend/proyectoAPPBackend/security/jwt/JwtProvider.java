@@ -32,7 +32,8 @@ public class JwtProvider {
 
     @Value("${jwt.expiration}")
     private int expiration;
-
+   
+    //metodo para generar el token
     public String generateToken(Authentication authentication) {
         UsuarioPrincipal usuarioPrincipal = (UsuarioPrincipal) authentication.getPrincipal();
         List<String> roles = usuarioPrincipal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
@@ -45,11 +46,13 @@ public class JwtProvider {
                 .signWith(getSecret(secret))
                 .compact();
     }
-
+    
+    //metodo para obtener el nombre de usuario del token
     public String getNombreUsuarioFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(getSecret(secret)).build().parseClaimsJws(token).getBody().getSubject();
     }
-
+    
+    //metodo para validar el token
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(getSecret(secret)).build().parseClaimsJws(token);
@@ -67,7 +70,8 @@ public class JwtProvider {
         }
         return false;
     }
-
+   
+    //metodo para refrescar el token
     public String refreshToken(JwtDto jwtDto) throws ParseException {
         try {
             Jwts.parserBuilder().setSigningKey(getSecret(secret)).build().parseClaimsJws(jwtDto.getToken());
@@ -89,8 +93,8 @@ public class JwtProvider {
     }
 
      private final static String ACCESS_TOKEN_SECRET = "4qhq8LrEBfYcaRHxhdb9zURb2rf8e7Ud";
-    //private final static String ACCESS_TOKEN_SECRET = "4qhq8LrEBfYcaRHxhdb9zURb2rf8e7Udd3oi4lsahdkfakh234jkh4kjahsdkfjhkjh23h24234h3kjhkjdhfsajdh2962983742dskjfhskj982928456y234sadjfg";
-
+    
+    //metodo para obtener la clave secreta
     private Key getSecret(String secret){
        return Keys.hmacShaKeyFor(ACCESS_TOKEN_SECRET.getBytes());
        

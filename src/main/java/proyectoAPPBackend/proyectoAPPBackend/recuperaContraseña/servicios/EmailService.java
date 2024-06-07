@@ -37,14 +37,15 @@ public class EmailService {
 
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("guapurasantaana@gmail.com");
-            message.setTo("purobarsa00guate@gmail.com");
+            message.setTo("josechavez4710@gmail.com");
             message.setSubject("Prueba de correo");
             message.setText("Hola, este es un correo de prueba");
     
             javaMailSender.send(message);
 
     }
-
+    
+     //metodo para enviar el correo con la plantilla html para recuperar contraseña
     public void enviarEmailTemplate(EmailValues emailValues){
         MimeMessage message = javaMailSender.createMimeMessage();
         try{

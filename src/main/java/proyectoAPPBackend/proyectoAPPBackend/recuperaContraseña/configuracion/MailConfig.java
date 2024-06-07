@@ -9,6 +9,8 @@ import java.util.Properties;
 
 @Configuration
 public class MailConfig {
+
+    // Configuración de JavaMailSender para enviar correos
     @Bean
     public JavaMailSender javaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
@@ -26,8 +28,9 @@ public class MailConfig {
 
         return mailSender;
     }
-
+    
+    // Elimina caracteres no ASCII
     private String cleanEmail(String email) {
-        return email.replaceAll("[^\\x00-\\x7F]", ""); // Elimina caracteres no ASCII
+        return email.replaceAll("[^\\x00-\\x7F]", ""); 
     }
 }

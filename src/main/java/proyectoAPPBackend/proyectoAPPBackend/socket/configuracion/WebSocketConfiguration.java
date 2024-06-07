@@ -16,10 +16,11 @@ public class WebSocketConfiguration  implements WebSocketMessageBrokerConfigurer
         registry.setApplicationDestinationPrefixes("/app");
     }
 
+    //Método que registra los endpoints de STOMP para el websocket
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/chat-websocket")
-                .setAllowedOrigins("https://aguasanta.store")
+                .setAllowedOrigins("http://localhost:4200/")
                 .withSockJS();
     }
 

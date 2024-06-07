@@ -19,14 +19,17 @@ import java.io.IOException;
 
 @Component
 public class JwtEntryPoint implements AuthenticationEntryPoint {
-
+    
+    //creamos un logger para mostrar los errores 
     private final static Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
+    
 
+    //metodo para manejar la excepcion de autenticacion de usuario es decir si el token es invalido o vacio
     @Override
     public void commence(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) throws IOException, ServletException {
         logger.error("fail en el método commence");
         //res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "no autorizado");
-        Mensaje mensaje = new Mensaje("token dfinválido o vacío");
+        Mensaje mensaje = new Mensaje("token inválido o vacío");
         res.setContentType("application/json");
         res.setStatus(HttpStatus.UNAUTHORIZED.value());
         res.getWriter().write(new ObjectMapper().writeValueAsString(mensaje));

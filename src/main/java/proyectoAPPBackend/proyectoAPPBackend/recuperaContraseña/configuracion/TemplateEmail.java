@@ -7,7 +7,8 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 @Configuration
 public class TemplateEmail {
-     
+    
+    // Configuración de Thymeleaf para enviar correos con plantillas HTML
     @Bean
     public ClassLoaderTemplateResolver templateResolver(){
 

@@ -22,7 +22,8 @@ public class EmailController {
     //inyectamos el servicio de emial
     @Autowired
     EmailService emailService;
-
+    
+    //metodo para enviar el correo con la plantilla html
     @PostMapping("/enviarEmail")
     public ResponseEntity<?> enviarEmailHtml(@RequestBody EmailValues emailValues){
             emailValues.setEmailFrom("aguapurasantaana@gmail.com");

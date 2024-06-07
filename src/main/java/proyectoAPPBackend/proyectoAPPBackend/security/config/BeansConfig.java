@@ -9,11 +9,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class BeansConfig {
-
+    
+    //Bean para encriptar la contraseña
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+    //Bean para la autenticacion del usuario
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

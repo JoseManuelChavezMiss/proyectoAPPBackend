@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.exceptions.CustomException;
 import proyectoAPPBackend.proyectoAPPBackend.security.dto.JwtDto;
+import proyectoAPPBackend.proyectoAPPBackend.security.dto.ListarUsuarioPorRol;
 import proyectoAPPBackend.proyectoAPPBackend.security.dto.LoginUsuario;
 import proyectoAPPBackend.proyectoAPPBackend.security.dto.NuevoUsuario;
 import proyectoAPPBackend.proyectoAPPBackend.security.entity.Rol;
@@ -24,8 +25,10 @@ import proyectoAPPBackend.proyectoAPPBackend.security.repository.UsuarioReposito
 
 import java.text.ParseException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -79,20 +82,46 @@ public class UsuarioService {
         return new JwtDto(token);
     }
 
-    public Mensaje save(NuevoUsuario nuevoUsuario){
-        if(usuarioRepository.existsByNombreUsuario(nuevoUsuario.getNombreUsuario()))
-            throw new CustomException(HttpStatus.BAD_REQUEST, "ese nombre de usuario ya existe");
-        if(usuarioRepository.existsByEmail(nuevoUsuario.getEmail()))
-            throw new CustomException(HttpStatus.BAD_REQUEST, "ese email de usuario ya existe");
-        Usuario usuario =
-                new Usuario(nuevoUsuario.getNombre(), nuevoUsuario.getNombreUsuario(), nuevoUsuario.getEmail(),
-                        passwordEncoder.encode(nuevoUsuario.getPassword()));
-        Set<Rol> roles = new HashSet<>();
-        roles.add(rolService.getByRolNombre(RolNombre.ROLE_USER).get());
-        if(nuevoUsuario.getRoles().contains("admin"))
-            roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
-        usuario.setRoles(roles);
-        usuarioRepository.save(usuario);
-        return new Mensaje(usuario.getNombreUsuario() + " ha sido creado");
+    // public Mensaje save(NuevoUsuario nuevoUsuario){
+    //     if(usuarioRepository.existsByNombreUsuario(nuevoUsuario.getNombreUsuario()))
+    //         throw new CustomException(HttpStatus.BAD_REQUEST, "ese nombre de usuario ya existe");
+    //     if(usuarioRepository.existsByEmail(nuevoUsuario.getEmail()))
+    //         throw new CustomException(HttpStatus.BAD_REQUEST, "ese email de usuario ya existe");
+    //     Usuario usuario =
+    //             new Usuario(nuevoUsuario.getNombre(), nuevoUsuario.getNombreUsuario(), nuevoUsuario.getEmail(),
+    //                     passwordEncoder.encode(nuevoUsuario.getPassword()));
+    //     Set<Rol> roles = new HashSet<>();
+    //     roles.add(rolService.getByRolNombre(RolNombre.ROLE_USER).get());
+    //     if(nuevoUsuario.getRoles().contains("admin"))
+    //         roles.add(rolService.getByRolNombre(RolNombre.ROLE_ADMIN).get());
+    //     usuario.setRoles(roles);
+    //     usuarioRepository.save(usuario);
+    //     return new Mensaje(usuario.getNombreUsuario() + " ha sido creado");
+    // }
+
+
+    //Metodo para crear usuario unicamente con el rol de ROLE_USER
+    // public Mensaje registroUsuario(NuevoUsuario nuevoUsuario){
+    //     if(usuarioRepository.existsByNombreUsuario(nuevoUsuario.getNombreUsuario()))
+    //         throw new CustomException(HttpStatus.BAD_REQUEST, "ese nombre de usuario ya existe");
+    //     if(usuarioRepository.existsByEmail(nuevoUsuario.getEmail()))
+    //         throw new CustomException(HttpStatus.BAD_REQUEST, "ese email de usuario ya existe");
+    //     Usuario usuario =
+    //             new Usuario(nuevoUsuario.getNombre(), nuevoUsuario.getNombreUsuario(), nuevoUsuario.getEmail(),
+    //                     passwordEncoder.encode(nuevoUsuario.getPassword()));
+    //     Set<Rol> roles = new HashSet<>();
+    //     roles.add(rolService.getByRolNombre(RolNombre.ROLE_USER).get());
+    //     usuario.setRoles(roles);
+    //     usuarioRepository.save(usuario);
+    //     return new Mensaje(usuario.getNombreUsuario() + " ha sido creado");
+    // }
+
+    //metodo para listar usuarios por rol
+    public List<ListarUsuarioPorRol> listarUsuariosPorRol() {
+        List<Object[]> results = usuarioRepository.listarUsuariosPorRol();
+        return results.stream()
+                .map(result -> new ListarUsuarioPorRol((int) result[0],(String) result[1], (String) result[2], (Boolean) result[3]))
+                .collect(Collectors.toList());
     }
+    
 }

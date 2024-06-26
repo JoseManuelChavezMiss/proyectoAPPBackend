@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,4 +25,19 @@ public class RolService {
     public void save(Rol rol){
         rolRepository.save(rol);
     }
+    
+    //lista los roles
+    public List<Rol> listarRoles() {
+        return rolRepository.findAll();
+    }
+
+     //metodo para actualizar el rol de un usuario
+     public void actualizarRolUsuario(Integer idUsuario, Integer idRol){
+        System.out.println("idUsuario: "+idUsuario+" idRol: "+idRol);
+        rolRepository.actualizarRolUsuario(idUsuario, idRol);
+    }
+    
+
+
+
 }

@@ -15,10 +15,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByTokenPassword(String tokenPassword);
     boolean existsByNombreUsuario(String nombreUsuario);
     boolean existsByEmail(String email);
+    //verificar el estado del usuario para el login
+    boolean existsByNombreUsuarioAndEstado(String nombreUsuario, boolean estado);
+    boolean existsByEmailAndEstado(String email, boolean estado);
 
     //ejecutamos un procedimiento almacenado
     @Query(value = "CALL sp_listarUsuariosPorRol()", nativeQuery = true)
     // List<ListarUsuarioPorRol> listarUsuariosPorRol();
     List<Object[]> listarUsuariosPorRol();
+
+    //envez de eliminar el usuario  solo pasamos el estado a false
+
 
 }

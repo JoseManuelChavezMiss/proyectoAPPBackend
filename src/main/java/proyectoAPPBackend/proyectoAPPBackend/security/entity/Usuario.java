@@ -26,7 +26,8 @@ public class Usuario {
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "usuario_id"),
     inverseJoinColumns = @JoinColumn(name = "rol_id"))
     private Set<Rol> roles = new HashSet<>();
-    private boolean estado;
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 1")
+    private boolean estado = true;
 
     public Usuario() {
     }

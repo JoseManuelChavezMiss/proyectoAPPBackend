@@ -65,7 +65,7 @@ public class EmailController {
             // System.out.println("Correo enviado"+emailService);
             return new ResponseEntity(
                     new Mensaje("Te hemos enviado un correo con las instrucciones para recuperar tu contraseña"),
-                    HttpStatus.NOT_FOUND);
+                    HttpStatus.OK);
 
         }
 
@@ -93,7 +93,7 @@ public class EmailController {
                 usuarioService.save(usuario);
 
                 return new ResponseEntity(new Mensaje("Contraseña actualizada correctamente"),
-                        HttpStatus.NOT_FOUND);
+                        HttpStatus.OK);
                
             }
 

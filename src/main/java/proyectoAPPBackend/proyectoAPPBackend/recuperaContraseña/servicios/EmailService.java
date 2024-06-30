@@ -13,7 +13,8 @@ import org.thymeleaf.TemplateEngine;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import proyectoAPPBackend.proyectoAPPBackend.recuperaContraseña.clases.EmailValues;
+import proyectoAPPBackend.proyectoAPPBackend.recuperaContraseña.dto.EmailValuesDTO;
+
 import org.thymeleaf.context.Context;
 
 
@@ -46,13 +47,14 @@ public class EmailService {
     }
     
      //metodo para enviar el correo con la plantilla html para recuperar contraseña
-    public void enviarEmailTemplate(EmailValues emailValues){
+    public void enviarEmailTemplate(EmailValuesDTO emailValues){
         MimeMessage message = javaMailSender.createMimeMessage();
         try{
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             Context context = new Context();
 
             Map<String, Object> model = new HashMap<>();
+        
             model.put("nombreUsuario", emailValues.getNombreUsuario());
             model.put("url", urlFront + emailValues.getJwt());
             context.setVariables(model);

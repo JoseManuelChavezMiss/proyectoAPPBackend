@@ -2,6 +2,7 @@ package proyectoAPPBackend.proyectoAPPBackend.security.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -76,6 +77,10 @@ public class UsuarioService {
         return usuarioRepository.existsByEmailAndEstado(email, estado);
     }
 
+    public void save(Usuario usuario) {
+        usuarioRepository.save(usuario);
+    }
+
     // public JwtDto login(LoginUsuario loginUsuario) {
     // Authentication authentication = authenticationManager.authenticate(
     // new UsernamePasswordAuthenticationToken(loginUsuario.getNombreUsuario(),
@@ -100,6 +105,7 @@ public class UsuarioService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtProvider.generateToken(authentication);
             return new JwtDto(jwt);
+          
         }
 
     }

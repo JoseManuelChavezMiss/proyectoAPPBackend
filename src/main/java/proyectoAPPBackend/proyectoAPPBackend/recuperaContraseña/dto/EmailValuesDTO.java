@@ -1,4 +1,4 @@
-package proyectoAPPBackend.proyectoAPPBackend.recuperaContraseña.clases;
+package proyectoAPPBackend.proyectoAPPBackend.recuperaContraseña.dto;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EmailValues {
+public class EmailValuesDTO {
 
     private String  emailFrom;
     private String emailTo;

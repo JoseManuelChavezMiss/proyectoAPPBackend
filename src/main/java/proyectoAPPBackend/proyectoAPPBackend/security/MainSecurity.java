@@ -52,6 +52,7 @@ public class MainSecurity {
                 "/chat-socket/**",
                 "/coordenadas/**",
                 "/topic/**",
+                "/foto/**",
                 "/v2/api-docs/**",
                 "/swagger-ui/**",
                 "/swagger-resources/**",

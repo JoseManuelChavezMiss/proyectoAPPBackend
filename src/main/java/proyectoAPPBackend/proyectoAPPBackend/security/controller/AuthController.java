@@ -3,21 +3,15 @@ package proyectoAPPBackend.proyectoAPPBackend.security.controller;
 import jakarta.validation.Valid;
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.security.dto.JwtDto;
-import proyectoAPPBackend.proyectoAPPBackend.security.dto.ListarUsuarioPorRol;
 import proyectoAPPBackend.proyectoAPPBackend.security.dto.LoginUsuario;
 import proyectoAPPBackend.proyectoAPPBackend.security.dto.NuevoUsuario;
-import proyectoAPPBackend.proyectoAPPBackend.security.entity.Rol;
-import proyectoAPPBackend.proyectoAPPBackend.security.entity.Usuario;
-import proyectoAPPBackend.proyectoAPPBackend.security.service.RolService;
 import proyectoAPPBackend.proyectoAPPBackend.security.service.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/auth")

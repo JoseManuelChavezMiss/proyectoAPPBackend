@@ -1,5 +1,7 @@
 package proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,16 +23,27 @@ public class Producto {
     
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private int idProducto;
+    private Long idProducto;
     private String nombre;
-    private int cantidad;
-    private float precio;
-    private String imagenUrl;
+    private String descripcion;
+    @JoinColumn(name = "idUnidadMedida")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "idAlmacen")
-    private Almacen almacen;
+    private UnidadMedida unidadMedida;
+    private BigDecimal precio;
+    private String imagenUrl;
     @Column(columnDefinition = "TINYINT(1) DEFAULT 1")
     private boolean estado;
+    
+    // private int idProducto;
+    // private String nombre;
+    // private int cantidad;
+    // private float precio;
+    // private String imagenUrl;
+    // @ManyToOne(optional = false)
+    // @JoinColumn(name = "idAlmacen")
+    // private Almacen almacen;
+    // @Column(columnDefinition = "TINYINT(1) DEFAULT 1")
+    // private boolean estado;
     
 
 

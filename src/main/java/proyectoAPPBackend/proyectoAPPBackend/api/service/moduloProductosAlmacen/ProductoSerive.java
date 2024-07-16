@@ -98,8 +98,9 @@ public class ProductoSerive implements AlmacenamientoService {
     }
 
     public void guardarProducto(Producto producto, MultipartFile archivo) {
-        String urlArchivo = almacenamiento(archivo);
-        if (urlArchivo != null) {
+          
+        if (archivo != null) {
+            String urlArchivo = almacenamiento(archivo);
             producto.setImagenUrl(urlArchivo);
             productoRepository.save(producto);
         } else {

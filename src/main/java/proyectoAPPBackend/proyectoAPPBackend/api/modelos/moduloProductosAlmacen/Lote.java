@@ -1,6 +1,8 @@
 package proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen;
 
+import java.time.LocalDate;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,12 +17,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Almacen {
+public class Lote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAlmacen;
+    private Long idLote;
     private Long idProducto;
-    private Integer cantidadDisponible;
+    private LocalDate fechaProduccion;
+    private Integer cantidadProduccion;
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 1")
+    private boolean estado = true;
+
     
 }

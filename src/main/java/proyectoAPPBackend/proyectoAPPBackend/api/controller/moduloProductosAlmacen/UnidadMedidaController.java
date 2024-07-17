@@ -1,7 +1,6 @@
 package proyectoAPPBackend.proyectoAPPBackend.api.controller.moduloProductosAlmacen;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,12 +59,13 @@ public class UnidadMedidaController {
 
     @DeleteMapping("/eliminar/{idUnidadMedida}")
     public ResponseEntity<Mensaje> eliminarUnidadMedida(@PathVariable int idUnidadMedida){
-        Optional<UnidadMedida> unidadMedida = unidadMedidaService.eliminarUnidadMedida(idUnidadMedida);
-        if(unidadMedida.isPresent()){
-            return ResponseEntity.ok(new Mensaje("Unidad medida eliminada correctamente"));
-        }else{
-            return ResponseEntity.badRequest().body(new Mensaje("Error al eliminar la unidad de medida"));
+        try {
+            unidadMedidaService.eliminarUnidadMedida(idUnidadMedida);
+            return new ResponseEntity<>(new Mensaje("Unidad de medida eliminado con éxito"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new Mensaje("No puedes eliminar esta unidad de medida porque esta asociada a otros productos"), HttpStatus.NOT_FOUND);
         }
+
     }
 
 

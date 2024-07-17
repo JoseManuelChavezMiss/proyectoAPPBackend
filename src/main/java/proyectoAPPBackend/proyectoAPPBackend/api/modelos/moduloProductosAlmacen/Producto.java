@@ -31,8 +31,8 @@ public class Producto {
     private UnidadMedida unidadMedida;
     private BigDecimal precio;
     private String imagenUrl;
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 1")
-    private boolean estado;
+    // @Column(columnDefinition = "TINYINT(1) DEFAULT 1")
+    // private boolean estado;
     
     // private int idProducto;
     // private String nombre;

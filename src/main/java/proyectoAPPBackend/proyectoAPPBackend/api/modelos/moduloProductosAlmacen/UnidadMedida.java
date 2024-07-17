@@ -22,8 +22,6 @@ public class UnidadMedida {
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int idUnidadMedida;
     private String nombre;
-     @Column(columnDefinition = "TINYINT(1) DEFAULT 1")
-    private boolean estado = true;
 
     
 }

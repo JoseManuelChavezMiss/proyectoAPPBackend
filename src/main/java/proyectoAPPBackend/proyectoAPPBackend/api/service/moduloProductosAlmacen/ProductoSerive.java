@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +28,8 @@ public class ProductoSerive implements AlmacenamientoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-   
-    private static final String mediaUrl = "http://localhost:8080/foto/foto/"; // La URL base donde están alojadas las imágenes
+    private static final String mediaUrl = "http://localhost:8080/foto/foto/"; // La URL base donde están alojadas las
+                                                                               // imágenes
 
     @Value("${media.location}")
     private String ubicacion; // La ubicación local de los archivos de imágenes
@@ -47,40 +47,40 @@ public class ProductoSerive implements AlmacenamientoService {
         }
     }
 
+    // metodo que nos permite guardar el archivo y retorna la url de la imagen
     @Override
     public String almacenamiento(MultipartFile archivo) {
         try {
             if (archivo.isEmpty()) {
                 throw new RuntimeException("El archivo está vacío.");
             } else {
-                String extension = "";
                 String nombreOriginal = archivo.getOriginalFilename();
-                if (nombreOriginal != null && nombreOriginal.contains(".")) {
-                    extension = nombreOriginal.substring(nombreOriginal.lastIndexOf("."));
-                }
 
-                String nombreAleatorio = UUID.randomUUID().toString() + extension;
                 Path destinoDirectorio = Paths.get(ubicacion);
-                Path destinoArchivo = destinoDirectorio.resolve(nombreAleatorio);
+                Path destinoArchivo = destinoDirectorio.resolve(nombreOriginal);
 
                 if (!Files.exists(destinoDirectorio)) {
                     Files.createDirectories(destinoDirectorio);
                 }
 
-                Files.copy(archivo.getInputStream(), destinoArchivo, StandardCopyOption.REPLACE_EXISTING);
+                // Verificar si el archivo ya existe antes de copiarlo
+                if (!Files.exists(destinoArchivo)) {
+                    Files.copy(archivo.getInputStream(), destinoArchivo, StandardCopyOption.REPLACE_EXISTING);
+                }
 
-                String url = mediaUrl + nombreAleatorio;
-
+                String url = mediaUrl + nombreOriginal;
 
                 return url;
             }
         } catch (Exception e) {
-            System.out.println("ERROR AL GUARDAR" + e);
+            System.out.println("ERROR AL GUARDAR: " + e);
         }
 
         return null;
     }
 
+
+    // metodo qu enos permite buscar la foto y mostrar la foto
     @Override
     public Resource cargarRecurso(String nombreArchivo) {
         try {
@@ -97,8 +97,9 @@ public class ProductoSerive implements AlmacenamientoService {
         }
     }
 
+    // metodo para guardar las fotos de los prudctos
     public void guardarProducto(Producto producto, MultipartFile archivo) {
-          
+
         if (archivo != null) {
             String urlArchivo = almacenamiento(archivo);
             producto.setImagenUrl(urlArchivo);
@@ -108,13 +109,43 @@ public class ProductoSerive implements AlmacenamientoService {
         }
     }
 
+    // lista todos los productos
     public List<Producto> listarProductos() {
-        return  productoRepository.findAll();
+        return productoRepository.findAll();
     }
 
+
+    public void modificarProducto(Producto producto, MultipartFile archivo) {
+        // Verificar si el producto existe en la base de datos
+        Optional<Producto> productoExistenteOpt = productoRepository.findByIdProducto(producto.getIdProducto());
+        if (!productoExistenteOpt.isPresent()) {
+            throw new RuntimeException("El producto no existe.");
+        }
+    
+        Producto productoExistente = productoExistenteOpt.get();
+    
+        // Si se proporciona un archivo, actualizar la URL de la imagen
+        if (archivo != null && !archivo.isEmpty()) {
+            String urlArchivo = almacenamiento(archivo);
+            productoExistente.setImagenUrl(urlArchivo);
+        }
+        // Si no se proporciona un archivo, la URL de la imagen existente se mantiene automáticamente
+    
+        // Actualizar otros campos del producto
+        productoExistente.setNombre(producto.getNombre());
+        productoExistente.setDescripcion(producto.getDescripcion());
+        productoExistente.setUnidadMedida(producto.getUnidadMedida());
+        productoExistente.setPrecio(producto.getPrecio());
+        // Añadir cualquier otro campo que necesites actualizar
+    
+        // Guardar el producto actualizado en la base de datos
+        productoRepository.save(productoExistente);
+    }
+
+    public void eliminarProducto(int idProducto){
+        productoRepository.deleteById(idProducto);
+    }
+    
     
 
-
-    
 }
-    

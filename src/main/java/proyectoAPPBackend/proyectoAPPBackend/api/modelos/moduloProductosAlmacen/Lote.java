@@ -2,7 +2,7 @@ package proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,8 +25,7 @@ public class Lote {
     private Long idProducto;
     private LocalDate fechaProduccion;
     private Integer cantidadProduccion;
-    @Column(columnDefinition = "TINYINT(1) DEFAULT 1")
-    private boolean estado = true;
+    
 
     
 }

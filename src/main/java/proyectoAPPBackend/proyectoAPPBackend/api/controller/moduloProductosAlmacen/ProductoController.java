@@ -3,22 +3,27 @@ package proyectoAPPBackend.proyectoAPPBackend.api.controller.moduloProductosAlma
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import jakarta.validation.Valid;
 import org.springframework.core.io.Resource;
 
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
@@ -33,6 +38,7 @@ public class ProductoController {
     @Autowired
     ProductoSerive productoService;
 
+    // guarda los productos
     @PostMapping("/guardar")
     public ResponseEntity<Mensaje> guardarAlmacen(@Valid @RequestPart("producto") Producto producto,
             @RequestPart("archivo") MultipartFile archivo) {
@@ -51,6 +57,7 @@ public class ProductoController {
         }
     }
 
+    // le pasamos el nombre del archivo y lo carga
     @GetMapping("/foto/{nombreArchivo}")
     public ResponseEntity<Resource> obtenerRecurso(@PathVariable String nombreArchivo) throws IOException {
         Resource file = productoService.cargarRecurso(nombreArchivo);
@@ -58,9 +65,68 @@ public class ProductoController {
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, contenType).body(file);
     }
 
+    // lista todos los productos
     @GetMapping("/listar")
     public List<Producto> listarProductos() {
         return productoService.listarProductos();
     }
+
+    @PostMapping("/modificar")
+    public ResponseEntity<Mensaje> modificarProducto(
+            @RequestPart("producto") String productoJson,
+            @RequestPart(value = "archivo", required = false) MultipartFile archivo) {
+
+        try {
+            // Convertir el JSON del producto a un objeto Producto
+            ObjectMapper objectMapper = new ObjectMapper();
+            Producto producto = objectMapper.readValue(productoJson, Producto.class);
+
+            // Llamar al servicio para modificar el producto
+            productoService.modificarProducto(producto, archivo);
+
+            Mensaje mensajeExito = new Mensaje("Producto modificado exitosamente.");
+            return ResponseEntity.ok(mensajeExito);
+        } catch (Exception e) {
+            Mensaje mensajeError = new Mensaje("Error al modificar el producto: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mensajeError);
+        }
+    }
+   
+    @DeleteMapping("/eliminar/{idProducto}")
+    public ResponseEntity<Mensaje> eliminarProducto(@PathVariable int idProducto) {
+        try {
+            productoService.eliminarProducto(idProducto);
+            Mensaje mensajeExito = new Mensaje("Producto eliminado exitosamente.");
+            return ResponseEntity.ok(mensajeExito);
+        } catch (Exception e) {
+            Mensaje mensajeError = new Mensaje("Error al eliminar el producto: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mensajeError);
+        }
+    }
+
+
+
+    // @DeleteMapping("/eliminar/{idProducto}")
+    // public ResponseEntity<Mensaje> eliminarProducto(@PathVariable int
+    // idProducto){
+    // Optional<Producto> producto = productoService.eliminarProducto(idProducto);
+    // if(producto.isPresent()){
+    // return ResponseEntity.ok(new Mensaje("Producto desactivado correctamente"));
+    // }else{
+    // return ResponseEntity.ok(new Mensaje("Error eliminada correctamente"));
+    // }
+    // }
+
+    // metodo para eliminar
+    // @DeleteMapping("/eliminarAlmacen/{idAlmacen}")
+    // public ResponseEntity<Mensaje> borrarCategoria(@PathVariable int idAlmacen) {
+    // Optional<Almacen> almacen = almacenService.eliminarAlmacen(idAlmacen);
+    // if(almacen.isPresent()){
+    // return ResponseEntity.ok(new Mensaje("Almacen eliminada correctamente"));
+    // }else{
+    // return ResponseEntity.badRequest().body(new Mensaje("Error al eliminar la
+    // almacen"));
+    // }
+    // }
 
 }

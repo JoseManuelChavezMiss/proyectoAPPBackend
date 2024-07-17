@@ -1,7 +1,6 @@
 package proyectoAPPBackend.proyectoAPPBackend.api.service.moduloProductosAlmacen;
 
 import java.util.List;
-import java.util.Optional;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,7 @@ public class AlmacenService {
     public void guardarAlmacen(Almacen almacen) {
         almacenRepository.save(almacen);
     }
+    
 
     //eliminar almacen
     // public Optional<Almacen> eliminarAlmacen(int idAlmacen) {

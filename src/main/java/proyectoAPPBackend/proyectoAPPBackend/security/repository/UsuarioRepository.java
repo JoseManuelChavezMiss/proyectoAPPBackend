@@ -24,7 +24,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     // List<ListarUsuarioPorRol> listarUsuariosPorRol();
     List<Object[]> listarUsuariosPorRol();
 
-    //envez de eliminar el usuario  solo pasamos el estado a false
+
 
 
 }

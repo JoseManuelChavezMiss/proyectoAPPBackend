@@ -90,8 +90,7 @@ public class UsuarioService {
     // }
 
     public JwtDto login(LoginUsuario loginUsuario) {
-        System.out.println("nombreUsuario: " + loginUsuario.getNombreUsuario());
-
+       
         boolean estado = validarEstadoUsuario(loginUsuario.getNombreUsuario(), true) || validarEstadoUsuarioEmail(loginUsuario.getNombreUsuario(), true);
 
         if (!estado) {
@@ -137,9 +136,9 @@ public class UsuarioService {
     // Metodo para crear usuario unicamente con el rol de ROLE_USER
     public Mensaje registroUsuario(NuevoUsuario nuevoUsuario) {
         if (usuarioRepository.existsByNombreUsuario(nuevoUsuario.getNombreUsuario()))
-            throw new CustomException(HttpStatus.BAD_REQUEST, "ese nombre de usuario yaexiste");
+            throw new CustomException(HttpStatus.BAD_REQUEST, "ese nombre de usuario ya existe");
         if (usuarioRepository.existsByEmail(nuevoUsuario.getEmail()))
-            throw new CustomException(HttpStatus.BAD_REQUEST, "ese email de usuario yaexiste");
+            throw new CustomException(HttpStatus.BAD_REQUEST, "ese email de usuario ya existe");
         Usuario usuario = new Usuario(nuevoUsuario.getNombre(), nuevoUsuario.getNombreUsuario(),
                 nuevoUsuario.getEmail(),
                 passwordEncoder.encode(nuevoUsuario.getPassword()), true);

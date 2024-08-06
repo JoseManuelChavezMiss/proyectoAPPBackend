@@ -28,8 +28,10 @@ public class ProductoSerive implements AlmacenamientoService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    private static final String mediaUrl = "http://localhost:8080/foto/foto/"; // La URL base donde están alojadas las
+    // private static final String mediaUrl = "http://localhost:8080/foto/foto/"; // La URL base donde están alojadas las
                                                                                // imágenes
+    @Value("${media.url}")
+    private String mediaUrl; // La URL base donde están alojadas las imágenes
 
     @Value("${media.location}")
     private String ubicacion; // La ubicación local de los archivos de imágenes
@@ -101,6 +103,7 @@ public class ProductoSerive implements AlmacenamientoService {
     public void guardarProducto(Producto producto, MultipartFile archivo) {
 
         if (archivo != null) {
+            //utilizamos el metodo almacenamiento para guardar la imagen y obtener la url
             String urlArchivo = almacenamiento(archivo);
             producto.setImagenUrl(urlArchivo);
             productoRepository.save(producto);
@@ -114,7 +117,7 @@ public class ProductoSerive implements AlmacenamientoService {
         return productoRepository.findAll();
     }
 
-
+    //metodo para modificar un producto
     public void modificarProducto(Producto producto, MultipartFile archivo) {
         // Verificar si el producto existe en la base de datos
         Optional<Producto> productoExistenteOpt = productoRepository.findByIdProducto(producto.getIdProducto());
@@ -126,6 +129,7 @@ public class ProductoSerive implements AlmacenamientoService {
     
         // Si se proporciona un archivo, actualizar la URL de la imagen
         if (archivo != null && !archivo.isEmpty()) {
+            // Guardar el archivo y obtener la URL de la imagen actualizada
             String urlArchivo = almacenamiento(archivo);
             productoExistente.setImagenUrl(urlArchivo);
         }

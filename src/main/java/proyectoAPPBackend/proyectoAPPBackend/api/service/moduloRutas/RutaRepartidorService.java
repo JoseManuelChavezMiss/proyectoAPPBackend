@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloRutas.RepartidorDTO;
-import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloRutas.Vehiculo;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloRutas.rutaRepartidor;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloRutas.RutaRepartidorRepository;
 

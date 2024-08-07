@@ -37,33 +37,6 @@ public class AlmacenController {
         almacenService.guardarAlmacen(almacen);
         return new ResponseEntity<>(new Mensaje("Almacen creado correctamente"), HttpStatus.OK);
     }
-
-    //metodo para modificar almacen
-    // @PutMapping("/modificar/{idAlmacen}")
-    // public ResponseEntity<Mensaje> modificarAlmacen(@PathVariable int idAlmacen, @RequestBody Almacen almacen) {
-    //     Almacen almacenActual = almacenService.findById(idAlmacen);
-    //     if (almacenActual == null) {
-    //         return new ResponseEntity<>(new Mensaje("Almacen no encontrado"), HttpStatus.NOT_FOUND);
-    //     } else {
-    //         almacenActual.setNombre(almacen.getNombre());
-    //         almacenActual.setCapacidad(almacen.getCapacidad());
-    //         almacenActual.setCantidad(almacen.getCantidad());
-    //         almacenService.guardarAlmacen(almacenActual);
-    //         return new ResponseEntity<>(new Mensaje("Almacen actualizado con éxito"), HttpStatus.OK);
-    //     }
-    // }
-
-    //metodo para eliminar
-    // @DeleteMapping("/eliminarAlmacen/{idAlmacen}")
-    // public ResponseEntity<Mensaje> borrarCategoria(@PathVariable int idAlmacen) {
-    //     Optional<Almacen> almacen = almacenService.eliminarAlmacen(idAlmacen);
-    //     if(almacen.isPresent()){
-    //         return ResponseEntity.ok(new Mensaje("Almacen eliminada correctamente"));
-    //     }else{
-    //         return ResponseEntity.badRequest().body(new Mensaje("Error al eliminar la almacen"));
-    //     }
-    // }
-
     
     
 }

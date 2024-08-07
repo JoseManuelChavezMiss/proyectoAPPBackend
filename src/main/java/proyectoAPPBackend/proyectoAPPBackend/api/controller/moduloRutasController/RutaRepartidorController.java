@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,6 +61,12 @@ public class RutaRepartidorController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new Mensaje("Error al modificar la ruta"));
         }
+    }
+
+    //metodo para buscar una ruta asignada a un repartidor por su id
+    @GetMapping("/buscarRutasRepartidor/{idUsuario}")   
+    public List<rutaRepartidor> buscarRutasRepartidor(@PathVariable int idUsuario) {
+        return rutaRepartidorService.buscarRutaRepartidorId(idUsuario);
     }
 
     

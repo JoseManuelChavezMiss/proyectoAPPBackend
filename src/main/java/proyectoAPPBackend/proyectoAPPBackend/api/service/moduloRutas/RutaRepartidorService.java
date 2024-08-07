@@ -70,5 +70,11 @@ public class RutaRepartidorService {
     public List<rutaRepartidor> listarRutasRepartidor() {
         return rutaRepartidorRepository.findAll();
     }
+
+    //metodo para lista rutas asignadas a un repartidor por su id
+    public List<rutaRepartidor> buscarRutaRepartidorId(int idUsuario) {
+        return rutaRepartidorRepository.findByUsuarioId(idUsuario);
+    }
+        
     
 }

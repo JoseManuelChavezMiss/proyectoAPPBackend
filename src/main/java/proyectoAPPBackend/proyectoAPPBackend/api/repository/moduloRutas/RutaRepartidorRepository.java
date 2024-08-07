@@ -18,7 +18,9 @@ public interface RutaRepartidorRepository extends JpaRepository<rutaRepartidor, 
     @Query(value = "CALL listarRepartidoresActivos()", nativeQuery = true)
     List<Object[]> listarRepartidoresActivos();
 
-    //busca por id de usuario
+    //busca por usuario
     Optional<rutaRepartidor> findByUsuario(Usuario usuario);
+
+    List<rutaRepartidor> findByUsuarioId(int idUsuario);
     
 }

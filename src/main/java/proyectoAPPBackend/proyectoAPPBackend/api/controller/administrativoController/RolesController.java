@@ -34,6 +34,10 @@ public class RolesController {
     public void actualizarRolUsuario(@RequestBody actualizarRolesDTO actualizarRolesDTO){
         rolService.actualizarRolUsuario(actualizarRolesDTO.getIdUsuario(), actualizarRolesDTO.getIdRol());
     }
+
+
+    // @Value("${media.location}")
+    // private String ubicacion;
    
     
 }

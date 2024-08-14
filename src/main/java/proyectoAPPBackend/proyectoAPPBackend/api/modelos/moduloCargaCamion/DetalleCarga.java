@@ -22,13 +22,17 @@ public class DetalleCarga {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idDetalleCarga;
-    @JoinColumn(name = "idCargarCamion")
-    @ManyToOne(optional = false)
-    private CargarCamion cargarCamion;
+
     @JoinColumn(name = "idProducto")
     @ManyToOne(optional = false)
     private Producto producto;
+
+    @ManyToOne
+    @JoinColumn(name = "idCargarCamion")
+    private CargarCamion cargarCamion; 
+
     private int cantidadLLenos;
+    
     private int cantidadVacios;
 
     

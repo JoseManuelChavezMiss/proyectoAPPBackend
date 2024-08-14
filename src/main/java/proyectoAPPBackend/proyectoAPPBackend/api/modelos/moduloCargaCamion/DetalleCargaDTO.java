@@ -1,17 +1,25 @@
 package proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloCargaCamion;
 
-import java.math.BigDecimal;
+import java.util.Date;
 
-import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen.UnidadMedida;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class DetalleCargaDTO {
 
+    private int idUsuario;
     private int idProducto;
-    private String nombre;
-    private UnidadMedida unidadMedida;
-    private BigDecimal precio;
-    private String imagenUrl;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/M/yyyy, HH:mm:ss")
+    private Date fecha;
+    private String observaciones;
     private int cantidad;
     
 }

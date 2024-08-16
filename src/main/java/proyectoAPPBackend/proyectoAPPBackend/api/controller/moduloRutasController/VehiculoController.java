@@ -21,8 +21,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloRutas.VehiculoSer
 
 @RestController
 @RequestMapping("/vehiculos")
-// @CrossOrigin(origins = "*")
-@CrossOrigin( origins = "http://aguasanta.store/")
+@CrossOrigin(origins = "*")
+//@CrossOrigin( origins = "http://aguasanta.store/")
 public class VehiculoController {
 
     @Autowired
@@ -59,7 +59,7 @@ public class VehiculoController {
             vehiculoService.eliminarVehiculo(idVehiculo);
             return ResponseEntity.ok(new Mensaje("Vehiculo eliminado"));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new Mensaje("Error al eliminar el vehiculo"));
+            return ResponseEntity.badRequest().body(new Mensaje("Error al eliminar el vehiculo esta asociado a un repartidor"));
         }
     }
 
@@ -78,9 +78,6 @@ public class VehiculoController {
             return ResponseEntity.badRequest().body(new Mensaje("Error al modificar el vehiculo"));
         }
     }
-
-
-
 
     
 }

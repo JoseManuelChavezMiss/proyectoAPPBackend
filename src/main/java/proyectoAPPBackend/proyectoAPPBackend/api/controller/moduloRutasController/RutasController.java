@@ -21,8 +21,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloRutas.RutasServic
 
 @RestController
 @RequestMapping("/rutas")
-// @CrossOrigin(origins = "*")
-@CrossOrigin( origins = "http://aguasanta.store/")
+@CrossOrigin(origins = "*")
+//@CrossOrigin( origins = "http://aguasanta.store/")
 public class RutasController {
 
     @Autowired
@@ -70,7 +70,7 @@ public class RutasController {
             rutasService.eliminarRuta(idRuta);
             return new ResponseEntity<>(new Mensaje("Ruta eliminada con éxito"), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new Mensaje("Error al eliminar la ruta"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new Mensaje("Error al eliminar la ruta esta asociada con un repartidor."), HttpStatus.BAD_REQUEST);
         }
     }
 }

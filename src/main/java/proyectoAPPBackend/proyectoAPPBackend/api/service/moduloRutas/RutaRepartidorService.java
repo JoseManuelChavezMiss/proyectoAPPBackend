@@ -55,16 +55,11 @@ public class RutaRepartidorService {
         rutaRepartidorRepository.save(rutaRepartidorModificado);
     }
 
-    //  public void modificarVehiculo(Vehiculo vehiculo) {
-    //     Vehiculo vehiculoModificado = vehiculoRepository.findById(vehiculo.getIdVehiculo()).get();
-    //     vehiculoModificado.setNombre(vehiculo.getNombre());
-    //     vehiculoModificado.setMarca(vehiculo.getMarca());
-    //     vehiculoModificado.setPlaca(vehiculo.getMarca());
-    //     vehiculoModificado.setModelo(vehiculo.getModelo());
-    //     vehiculoModificado.setCapacidadAlmacenaje(vehiculo.getCapacidadAlmacenaje());
-    //     vehiculoModificado.setPlaca(vehiculo.getPlaca());
-    //     vehiculoRepository.save(vehiculoModificado);
-    // }
+    //metodo para eliminar una ruta asignada a un repartidor
+    public void eliminarRutaRepartidor(int idRutaRepartidor) {
+        rutaRepartidorRepository.deleteById(idRutaRepartidor);
+    }
+
 
     //metodo para listar las rutas asignadas a un repartidor
     public List<rutaRepartidor> listarRutasRepartidor() {

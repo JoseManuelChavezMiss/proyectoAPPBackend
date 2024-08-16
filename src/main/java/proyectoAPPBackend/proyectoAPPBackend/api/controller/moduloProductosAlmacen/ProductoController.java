@@ -29,7 +29,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloProductosAlmacen.
 
 @RestController
 @RequestMapping("/producto")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
+@CrossOrigin( origins = "http://aguasanta.store/")
 public class ProductoController {
 
     @Autowired

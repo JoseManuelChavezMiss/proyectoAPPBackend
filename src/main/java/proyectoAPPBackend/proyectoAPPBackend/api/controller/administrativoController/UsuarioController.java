@@ -22,7 +22,8 @@ import proyectoAPPBackend.proyectoAPPBackend.security.service.UsuarioService;
 
 @RestController
 @RequestMapping("/usuario")
-@CrossOrigin( origins = "*")
+// @CrossOrigin( origins = "*")
+@CrossOrigin( origins = "http://aguasanta.store/")
 public class UsuarioController {
 
     @Autowired

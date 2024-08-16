@@ -21,7 +21,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloRutas.RutasServic
 
 @RestController
 @RequestMapping("/rutas")
-@CrossOrigin(origins = "*")
+// @CrossOrigin(origins = "*")
+@CrossOrigin( origins = "http://aguasanta.store/")
 public class RutasController {
 
     @Autowired

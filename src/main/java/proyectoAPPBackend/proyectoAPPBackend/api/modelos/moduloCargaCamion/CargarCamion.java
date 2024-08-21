@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,6 +39,9 @@ public class CargarCamion {
     
     @OneToMany(mappedBy = "cargarCamion", cascade = CascadeType.ALL)  // Cambiar "detalleCarga" a "cargarCamion"
     private List<DetalleCarga> detalles;
+
+    @Column(columnDefinition = "TINYINT(1) DEFAULT 1")
+    private Boolean completado;
     
     // private String estado;
 }

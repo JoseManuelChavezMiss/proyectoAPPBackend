@@ -14,6 +14,6 @@ public interface VentaRepository extends JpaRepository<Venta, Integer> {
     @Query(value = "CALL ListarUsuariosPorRolVenta(:valor)", nativeQuery = true)
     List<Object[]> listarUsuariosPorRolVenta(int valor);
 
-    @Query(value = "CALL obtenerCargasCamionDelDiaPorUsuario(:idUsuario)", nativeQuery = true)
+    @Query(value = "CALL sp_obtenerCargasCamionDelDiaPorUsuario(:idUsuario)", nativeQuery = true)
     List<Object[]> obtenerCargasCamionDelDiaPorUsuario(int idUsuario); 
 }

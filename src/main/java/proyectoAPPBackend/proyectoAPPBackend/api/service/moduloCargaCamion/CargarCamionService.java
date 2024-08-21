@@ -14,6 +14,7 @@ import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloCargaCamion.Detal
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloRutas.rutaRepartidor;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloCargaCamion.CargarCamionRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloCargaCamion.DetalleCargaRepository;
+import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloProductosAlmacen.AlmacenRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloProductosAlmacen.ProductoRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloRutas.RutaRepartidorRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloRutas.RutaRepartidorService;
@@ -42,6 +43,12 @@ public class CargarCamionService {
 
     @Autowired
     RutaRepartidorRepository rutaRepartidorRepository;
+     
+    @Autowired
+    DetalleCargaService detalleCargaService;
+
+    @Autowired
+    AlmacenRepository almacenRepository;
 
     // metodo para encontrar el usuario por su id
     public Usuario buscarUsuarioPorId(int idUsuario) {
@@ -78,25 +85,31 @@ public class CargarCamionService {
 
     // metodo para guardar la carga de un camion
     public CargarCamion guardarCargaCamion(List<DetalleCargaDTO> detalleCarga) {
-        CargarCamion cargarCamion = new CargarCamion();
+        if(cargaCamionRepository.verificarCargaCreadaRepartidor(detalleCarga.get(0).getIdUsuario())){
+            throw new RuntimeException("Ya tiene una carga creada");
+        }else{
+            CargarCamion cargarCamion = new CargarCamion();
 
-        cargarCamion.setFecha(new Date());
-        cargarCamion.setUsuario(buscarUsuarioPorId(detalleCarga.get(0).getIdUsuario()));
-        cargarCamion.setObservaciones(detalleCarga.get(0).getObservaciones());
-
-        // generar y asignar los detalles de la carga
-        List<DetalleCarga> detalles = generarDetalleCarga(cargarCamion, detalleCarga);
-        cargarCamion.setDetalles(detalles);
-
-        // calcular el total de la carga
-        double totalCarga = calcularTotalCarga(detalleCarga);
-        // verificar si el total de la carga sobrepasa la capacidad del vehiculo
-        if (verificarCapacidadVehiculo(detalleCarga.get(0).getIdUsuario(), (int) totalCarga)) {
-            return cargaCamionRepository.save(cargarCamion);
-        } else {
-
-            throw new RuntimeException("La carga sobrepasa la capacidad del vehiculo");
+            cargarCamion.setFecha(new Date());
+            cargarCamion.setUsuario(buscarUsuarioPorId(detalleCarga.get(0).getIdUsuario()));
+            cargarCamion.setObservaciones(detalleCarga.get(0).getObservaciones());
+            cargarCamion.setCompletado(false);
+    
+            // generar y asignar los detalles de la carga
+            List<DetalleCarga> detalles = generarDetalleCarga(cargarCamion, detalleCarga);
+            cargarCamion.setDetalles(detalles);
+    
+            // calcular el total de la carga
+            double totalCarga = calcularTotalCarga(detalleCarga);
+            // verificar si el total de la carga sobrepasa la capacidad del vehiculo
+            if (verificarCapacidadVehiculo(detalleCarga.get(0).getIdUsuario(), (int) totalCarga)) {
+                return cargaCamionRepository.save(cargarCamion);
+            } else {
+    
+                throw new RuntimeException("La carga sobrepasa la capacidad del vehiculo");
+            }
         }
+       
     }
 
     // metodo para generar el detalle de la carga
@@ -132,5 +145,15 @@ public class CargarCamionService {
         return rutas;
     }
     
+    //metodo para obtener el detalle de la carga a partir de id_cargar_camion
+    public void  descargarCamion(int idUsuario) {
+        cargaCamionRepository.descargarCamion(idUsuario);
+    }
 
+    //meto para verificar si ya tiene una carga creada
+    // public boolean verificarCargaCreada(int idUsuario) {
+    //     return cargaCamionRepository.verificarCargaCreada(idUsuario);
+    // }
+
+   
 }

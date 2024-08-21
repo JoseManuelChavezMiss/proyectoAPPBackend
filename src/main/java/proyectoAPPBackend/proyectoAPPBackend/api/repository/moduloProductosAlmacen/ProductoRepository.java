@@ -11,5 +11,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen.
 public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
     Optional<Producto> findByIdProducto(long idProducto);
+
+    //obtener el precio de un producto por su id
+    Optional<Producto> findByPrecio(long idProducto);
     
 }

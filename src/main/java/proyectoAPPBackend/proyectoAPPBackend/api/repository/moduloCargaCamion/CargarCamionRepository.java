@@ -17,5 +17,8 @@ public interface CargarCamionRepository extends JpaRepository<CargarCamion, Inte
      @Query(value = "SELECT verificarCargaCreadaRepartidor(:idUsuario)", nativeQuery = true)
      Boolean verificarCargaCreadaRepartidor(@Param("idUsuario") int idUsuario);
 
+     @Query(value = "SELECT verificarCantidadDisponibleAlmacen(:idProducto,:cantidadSolicitada)", nativeQuery = true)
+     Boolean verificarCantidadDisponibleAlmacen(int idProducto, int cantidadSolicitada);
+
 
 }

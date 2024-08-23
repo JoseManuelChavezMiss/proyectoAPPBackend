@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloCargaCamion.CargarCamion;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloCargaCamion.DetalleCarga;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloCargaCamion.DetalleCargaDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen.Producto;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloRutas.rutaRepartidor;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloCargaCamion.CargarCamionRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloCargaCamion.DetalleCargaRepository;
@@ -116,18 +117,28 @@ public class CargarCamionService {
     public List<DetalleCarga> generarDetalleCarga(CargarCamion cargarCamion, List<DetalleCargaDTO> listaDetalleCarga) {
         List<DetalleCarga> detalleCarga = new ArrayList<>();
 
+              Producto verificarProducto = productoRepository.findById(listaDetalleCarga.get(0).getIdProducto())
+        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
         for (DetalleCargaDTO detalleDTO : listaDetalleCarga) {
-            DetalleCarga detalle = new DetalleCarga();
+            if(cargaCamionRepository.verificarCantidadDisponibleAlmacen(detalleDTO.getIdProducto(), detalleDTO.getCantidad())){
 
-            detalle.setCargarCamion(cargarCamion);
+                DetalleCarga detalle = new DetalleCarga();
 
-            detalle.setProducto(productoRepository.findById(detalleDTO.getIdProducto())
-                    .orElseThrow(() -> new RuntimeException("Producto no encontrado")));
-
-            detalle.setCantidadLLenos(detalleDTO.getCantidad());
-            detalle.setCantidadVacios(0);
-
-            detalleCarga.add(detalle);
+                detalle.setCargarCamion(cargarCamion);
+    
+                detalle.setProducto(productoRepository.findById(detalleDTO.getIdProducto())
+                        .orElseThrow(() -> new RuntimeException("Producto no encontrado")));
+    
+                detalle.setCantidadLLenos(detalleDTO.getCantidad());
+                detalle.setCantidadVacios(0);
+    
+                detalleCarga.add(detalle);
+            }
+            else {
+                throw new RuntimeException("No hay existencias suficientes del producto: " + verificarProducto.getNombre());
+            }
+           
         }
 
         return detalleCarga;

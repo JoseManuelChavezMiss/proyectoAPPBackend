@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOVenta.DetalleVentaDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOVenta.VentaCargaCamionDTO;
@@ -71,21 +70,29 @@ public class VentaService {
     //Metodo para generar el detalle de la venta
     public List<DetalleVenta> generarDetalleVenta(Venta venta, List<DetalleVentaDTO> listaDetalleVenta) {
         List<DetalleVenta> detalleVenta = new ArrayList<>();
+
+        Producto verificarProducto = productoRepository.findById(listaDetalleVenta.get(0).getIdProducto())
+        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
         
         for (DetalleVentaDTO detalleDTO : listaDetalleVenta) {
-            DetalleVenta detalle = new DetalleVenta();
-            detalle.setVenta(venta);
-            System.out.println(detalleDTO.getIdProducto());
-            
-            // Obtener el producto por ID una sola vez
-            Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
-                    .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-            
-            detalle.setProducto(producto);
-            detalle.setCantidad(detalleDTO.getCantidad());
-            detalle.setPrecio(producto.getPrecio());
-    
-            detalleVenta.add(detalle);
+            if(ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), detalleDTO.getIdProducto())){
+                DetalleVenta detalle = new DetalleVenta();
+                detalle.setVenta(venta);
+                System.out.println(detalleDTO.getIdProducto());
+                
+                // Obtener el producto por ID una sola vez
+                Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
+                        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+                
+                detalle.setProducto(producto);
+                detalle.setCantidad(detalleDTO.getCantidad());
+                detalle.setPrecio(producto.getPrecio());
+        
+                detalleVenta.add(detalle);
+            }else {
+                throw new RuntimeException("No hay existencias suficientes del producto: " + verificarProducto.getNombre());
+            }
+           
         }
         return detalleVenta;
     }

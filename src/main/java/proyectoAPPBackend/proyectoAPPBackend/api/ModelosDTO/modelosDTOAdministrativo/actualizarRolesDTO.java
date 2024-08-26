@@ -11,5 +11,6 @@ public class actualizarRolesDTO {
 
     private int idUsuario;
     private int idRol;
+    private int telefono;
     
 }

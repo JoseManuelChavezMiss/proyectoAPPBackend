@@ -41,6 +41,7 @@ public class JwtProvider {
                 .setSubject(usuarioPrincipal.getUsername())
                 .claim("IdUsuario",usuarioPrincipal.getId())
                 .claim("roles", roles)
+                .claim("telefono", usuarioPrincipal.getTelefono())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + expiration * 180))
                 .signWith(getSecret(secret))

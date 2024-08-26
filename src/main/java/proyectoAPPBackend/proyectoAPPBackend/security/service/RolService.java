@@ -32,9 +32,9 @@ public class RolService {
     }
 
      //metodo para actualizar el rol de un usuario
-     public void actualizarRolUsuario(Integer idUsuario, Integer idRol){
+     public void actualizarRolUsuario(Integer idUsuario, Integer idRol, Integer telefono){
         System.out.println("idUsuario: "+idUsuario+" idRol: "+idRol);
-        rolRepository.actualizarRolUsuario(idUsuario, idRol);
+        rolRepository.actualizarRolYTelefonoUsuario(idUsuario, idRol, telefono);
     }
     
 

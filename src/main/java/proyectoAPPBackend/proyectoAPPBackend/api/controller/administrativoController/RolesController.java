@@ -33,7 +33,7 @@ public class RolesController {
     //Actualiza el rol de un usuario
     @PostMapping("/actualizarRolUsuario")
     public void actualizarRolUsuario(@RequestBody actualizarRolesDTO actualizarRolesDTO){
-        rolService.actualizarRolUsuario(actualizarRolesDTO.getIdUsuario(), actualizarRolesDTO.getIdRol());
+        rolService.actualizarRolUsuario(actualizarRolesDTO.getIdUsuario(), actualizarRolesDTO.getIdRol(), actualizarRolesDTO.getTelefono());
     }
 
 

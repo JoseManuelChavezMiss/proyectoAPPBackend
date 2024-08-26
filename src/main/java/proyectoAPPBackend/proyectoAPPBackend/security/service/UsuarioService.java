@@ -80,15 +80,6 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    // public JwtDto login(LoginUsuario loginUsuario) {
-    // Authentication authentication = authenticationManager.authenticate(
-    // new UsernamePasswordAuthenticationToken(loginUsuario.getNombreUsuario(),
-    // loginUsuario.getPassword()));
-    // SecurityContextHolder.getContext().setAuthentication(authentication);
-    // String jwt = jwtProvider.generateToken(authentication);
-    // return new JwtDto(jwt);
-    // }
-
     public JwtDto login(LoginUsuario loginUsuario) {
        
         boolean estado = validarEstadoUsuario(loginUsuario.getNombreUsuario(), true) || validarEstadoUsuarioEmail(loginUsuario.getNombreUsuario(), true);
@@ -139,7 +130,7 @@ public class UsuarioService {
             throw new CustomException(HttpStatus.BAD_REQUEST, "ese nombre de usuario ya existe");
         if (usuarioRepository.existsByEmail(nuevoUsuario.getEmail()))
             throw new CustomException(HttpStatus.BAD_REQUEST, "ese email de usuario ya existe");
-        Usuario usuario = new Usuario(nuevoUsuario.getNombre(), nuevoUsuario.getNombreUsuario(),
+        Usuario usuario = new Usuario(nuevoUsuario.getNombre(), nuevoUsuario.getNombreUsuario(),nuevoUsuario.getTelefono(),
                 nuevoUsuario.getEmail(),
                 passwordEncoder.encode(nuevoUsuario.getPassword()), true);
         Set<Rol> roles = new HashSet<>();
@@ -153,8 +144,8 @@ public class UsuarioService {
     public List<ListarUsuarioPorRol> listarUsuariosPorRol() {
         List<Object[]> results = usuarioRepository.listarUsuariosPorRol();
         return results.stream()
-                .map(result -> new ListarUsuarioPorRol((int) result[0], (String) result[1], (String) result[2],
-                        (Boolean) result[3]))
+                .map(result -> new ListarUsuarioPorRol((int) result[0], (String) result[1], (String) result[2], (int) result[3],
+                        (Boolean) result[4]))
                 .collect(Collectors.toList());
     }
 
@@ -188,6 +179,7 @@ public class UsuarioService {
         Usuario usuario = new Usuario(
                 nuevoUsuario.getNombre(),
                 nuevoUsuario.getNombreUsuario(),
+                nuevoUsuario.getTelefono(),
                 nuevoUsuario.getEmail(),
                 passwordEncoder.encode(nuevoUsuario.getPassword()),
                 true);

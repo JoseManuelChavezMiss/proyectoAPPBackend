@@ -16,9 +16,11 @@ public interface RolRepository extends JpaRepository<Rol, Integer> {
     //metodo para buscar el nombre del rol
     Optional<Rol> findByRolNombre(RolNombre rolNombre);
 
-    @Procedure(procedureName = "sp_actualizarRolUsuario")
-    void actualizarRolUsuario(@Param("idUsuario") Integer idUsuario, 
-                              @Param("idRol") Integer idRol);
+    @Procedure(procedureName = "sp_actualizarRolYTelefonoUsuario")
+    void actualizarRolYTelefonoUsuario(@Param("idUsuario") Integer idUsuario, 
+                                       @Param("idRol") Integer idRol, 
+                                       @Param("nuevoTelefono") Integer nuevoTelefono);
+    
 
 
 }

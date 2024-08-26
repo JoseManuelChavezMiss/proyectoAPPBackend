@@ -11,30 +11,41 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @NotNull
     private String nombre;
+
     @NotNull
     @Column(unique = true)
     private String nombreUsuario;
+
+    private int telefono;
+
     @NotNull
     private String email;
+
     @NotNull
     private String password;
+
     private String tokenPassword;
+
     @NotNull
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_rol", joinColumns = @JoinColumn(name = "usuario_id"),
     inverseJoinColumns = @JoinColumn(name = "rol_id"))
     private Set<Rol> roles = new HashSet<>();
+
     @Column(columnDefinition = "TINYINT(1) DEFAULT 1")
     private boolean estado = true;
+    
 
     public Usuario() {
     }
 
-    public Usuario(@NotNull String nombre, @NotNull String nombreUsuario, @NotNull String email, @NotNull String password, boolean estado) {
+    public Usuario(@NotNull String nombre, @NotNull String nombreUsuario,int teelefono ,@NotNull String email, @NotNull String password, boolean estado) {
         this.nombre = nombre;
         this.nombreUsuario = nombreUsuario;
+        this.telefono = teelefono;
         this.email = email;
         this.password = password;
         this.estado = estado;
@@ -102,6 +113,14 @@ public class Usuario {
 
     public void setEstado(boolean estado) {
         this.estado = estado;
+    }
+
+    public int getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(int telefono) {
+        this.telefono = telefono;
     }
 
     

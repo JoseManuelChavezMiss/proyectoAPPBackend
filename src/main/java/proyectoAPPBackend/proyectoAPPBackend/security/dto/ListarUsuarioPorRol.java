@@ -12,5 +12,6 @@ public class ListarUsuarioPorRol {
     private int id;
     private String nombre;
     private String rol_nombre;
+    private int telefono;
     private boolean estado;
 }

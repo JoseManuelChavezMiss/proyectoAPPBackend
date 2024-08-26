@@ -11,6 +11,7 @@ public class NuevoUsuario {
     private String nombre;
     @NotBlank(message = "nombre de usuario obligatorio")
     private String nombreUsuario;
+    private int telefono;
     @Email(message = "dirección de email no válida")
     @NotBlank(message = "email obligatorio")
     private String email;
@@ -56,5 +57,13 @@ public class NuevoUsuario {
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public int getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(int telefono) {
+        this.telefono = telefono;
     }
 }

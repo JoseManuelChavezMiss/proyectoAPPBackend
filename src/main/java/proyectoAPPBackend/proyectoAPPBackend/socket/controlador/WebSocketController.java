@@ -13,6 +13,6 @@ public class WebSocketController {
     @SendTo("/topic/{roomId}")
     public Coordenadas chat(@DestinationVariable String roomId, Coordenadas message) {
         System.out.println(message);
-        return new Coordenadas(message.getLatitud(), message.getLongitud(), message.getIdRepartidor());
+        return new Coordenadas(message.getLatitud(), message.getLongitud(), message.getIdRepartidor(),message.getTelefono(), message.getNombreUsuario());
     }
 }

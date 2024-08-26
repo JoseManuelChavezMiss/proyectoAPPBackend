@@ -10,6 +10,8 @@ public class Coordenadas {
     String latitud;
     String longitud;
     String idRepartidor;
+    String telefono;
+    String nombreUsuario;
 
     
 }

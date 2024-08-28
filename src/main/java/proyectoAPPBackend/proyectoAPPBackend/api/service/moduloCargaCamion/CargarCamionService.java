@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOCargarCamion.ObtenerResumenCargaDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloCargaCamion.CargarCamion;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloCargaCamion.DetalleCarga;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloCargaCamion.DetalleCargaDTO;
@@ -165,6 +166,20 @@ public class CargarCamionService {
     // public boolean verificarCargaCreada(int idUsuario) {
     //     return cargaCamionRepository.verificarCargaCreada(idUsuario);
     // }
+
+    public List<ObtenerResumenCargaDTO> obtenerResumenCarga(int idUsuario) {
+        List<Object[]> resultados = cargaCamionRepository.obtenerResumenCarga(idUsuario);
+        List<ObtenerResumenCargaDTO> resumenCarga = new ArrayList<>();
+
+        for(Object[] resultado : resultados){
+            ObtenerResumenCargaDTO dto = new ObtenerResumenCargaDTO();
+            dto.setNombreProducto((String) resultado[0]);
+            dto.setCantidadLLenos(((Number) resultado[1]).intValue());
+            dto.setCantidadVacios(((Number) resultado[2]).intValue());
+            resumenCarga.add(dto);
+        }
+        return resumenCarga;
+    }
 
    
 }

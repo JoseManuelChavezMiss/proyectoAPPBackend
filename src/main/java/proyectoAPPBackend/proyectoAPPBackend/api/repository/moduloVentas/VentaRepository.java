@@ -17,6 +17,10 @@ public interface VentaRepository extends JpaRepository<Venta, Integer> {
     @Query(value = "CALL sp_obtenerCargasCamionDelDiaPorUsuario(:idUsuario)", nativeQuery = true)
     List<Object[]> obtenerCargasCamionDelDiaPorUsuario(int idUsuario);
 
-    @Query(value = "SELECT verificarExistenciasRepartidor(:p_id_usuario, :p_id_producto)", nativeQuery = true)
-    Boolean verificarExistenciasRepartidor(int p_id_usuario, int p_id_producto);
+    @Query(value = "SELECT verificarExistenciasRepartidor(:p_id_usuario, :p_id_producto, :p_cantidad)", nativeQuery = true)
+    Boolean verificarExistenciasRepartidor(int p_id_usuario, int p_id_producto, int p_cantidad);
+
+    @Query(value = "SELECT productosDisponiblesDetalleCarga(:idProducto, :cantidad, :idRepartidor)", nativeQuery = true)
+    Boolean productosDisponiblesDetalleCarga(int idProducto, int cantidad, int idRepartidor);
+
 }

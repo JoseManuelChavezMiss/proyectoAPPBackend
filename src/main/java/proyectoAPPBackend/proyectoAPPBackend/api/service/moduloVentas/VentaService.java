@@ -75,7 +75,7 @@ public class VentaService {
         .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
         
         for (DetalleVentaDTO detalleDTO : listaDetalleVenta) {
-            if(ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), detalleDTO.getIdProducto())){
+            if(ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), detalleDTO.getIdProducto(), detalleDTO.getCantidad())){
                 DetalleVenta detalle = new DetalleVenta();
                 detalle.setVenta(venta);
                 System.out.println(detalleDTO.getIdProducto());
@@ -109,6 +109,9 @@ public class VentaService {
         return ventaRepository.save(venta);
         
     }
+
+    
+  
     
 
 }

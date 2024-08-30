@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.Pedido;
+import proyectoAPPBackend.proyectoAPPBackend.security.entity.Usuario;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
@@ -14,6 +15,8 @@ public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
     //metodo para buscar los pedidos por el id del usuario que realizo el pedido pendiente
     // List<Pedido> findByUsuarioIdAndEstado(int usuarioId, String estado);
     List<Pedido> findByUsuarioIdAndEstado(int usuarioId, String estado);
+
+    List<Pedido> findByUsuario(Usuario usuario);
 
     @Query(value = "CALL sp_obtenerPedidosPendientes()", nativeQuery = true)
     List<Object[]> listarPedidosPendientes();

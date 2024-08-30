@@ -17,7 +17,6 @@ import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.PedidoDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.PedidosPendientesDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.productoPedidoDTO;
-import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.Pedido;
 import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloPedido.PedidoService;
 
 @RestController

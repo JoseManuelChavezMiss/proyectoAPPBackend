@@ -14,6 +14,5 @@ public class AsignacionPedidoDTO {
 
     private int idPedido;
     private int idRepartidor;
-    private Date fechaAsignacion;
     
 }

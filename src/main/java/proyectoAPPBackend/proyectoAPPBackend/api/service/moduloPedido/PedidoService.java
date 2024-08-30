@@ -42,6 +42,7 @@ public class PedidoService {
     @Autowired
     ProductoRepository productoRepository;
 
+
     public Pedido crearPedido(List<productoPedidoDTO> productos) {
 
         // creamos un objeto pedido y le asignamos los valores
@@ -120,17 +121,12 @@ public class PedidoService {
 
         return randomNumber.toString();
     }
-
-    // metodo para listar los pedidos pendientes de un usuario por su id
-    // public List<Pedido> listarPedidosPendientes(int idUsuario) {
-    //     // return pedidoRepository.findByUsuarioId(idUsuario, "Pendiente");
-    //     return pedidoRepository.findByUsuarioIdAndEstado(idUsuario, "Pendiente");
-    // }
+    
 
     // metodo para listar los pedidos con el dto pedidoDTO
     public List<PedidoDTO> listarPedidosDTO(int idUsuario) {
         // List<Pedido> pedidos = pedidoRepository.findByUsuarioIdAndEstado(idUsuario, "Asignado");
-        List<Pedido> pedidos = pedidoRepository.findAll();
+        List<Pedido> pedidos = pedidoRepository.findByUsuario(buscarUsuarioPorId(idUsuario));
         return pedidos.stream().map(pedido -> {
             PedidoDTO dto = new PedidoDTO();
             dto.setIdPedido(pedido.getIdPedido());
@@ -180,6 +176,8 @@ public class PedidoService {
     
         return pedidos;
     }
+
+    
     
     
 }

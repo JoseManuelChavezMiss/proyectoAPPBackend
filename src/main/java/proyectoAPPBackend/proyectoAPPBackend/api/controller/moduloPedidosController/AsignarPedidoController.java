@@ -1,9 +1,7 @@
 package proyectoAPPBackend.proyectoAPPBackend.api.controller.moduloPedidosController;
 
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.AsignacionPedidoDTO;
-import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.AsignacionPedido;
 import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloPedido.AsignarPedidoService;
 
 @RestController
@@ -29,7 +26,7 @@ public class AsignarPedidoController {
     // metodo para asignar un pedido a un repartidor
     @PostMapping("/asignar")
     public ResponseEntity<Mensaje> asignarPedido(@RequestBody AsignacionPedidoDTO asignacionPedidoDTO) {
-        asignarPedidoService.asignarPedido(asignacionPedidoDTO.getIdRepartidor(), asignacionPedidoDTO.getIdPedido(), asignacionPedidoDTO.getFechaAsignacion());
+        asignarPedidoService.asignarPedido(asignacionPedidoDTO.getIdRepartidor(), asignacionPedidoDTO.getIdPedido(), new java.util.Date());
         return new ResponseEntity<>(new Mensaje("Pedido asignado correctamente"), HttpStatus.OK);
     }
 

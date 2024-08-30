@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.PedidoDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.PedidosPendientesDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.productoPedidoDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.Pedido;
 import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloPedido.PedidoService;
@@ -42,21 +43,21 @@ public class PedidosController {
     }
 
     //metodo para obtener los pedidos pendientes de un usuario
-    @GetMapping("/pendientes/{idUsuario}")
-    public List<Pedido> obtenerPedidosPendientes(@PathVariable int idUsuario){
-        return pedidoService.listarPedidosPendientes(idUsuario);
-    }
+    // @GetMapping("/pendientes/{idUsuario}")
+    // public List<Pedido> obtenerPedidosPendientes(@PathVariable int idUsuario){
+    //     return pedidoService.listarPedidosPendientes(idUsuario);
+    // }
 
     //metodo para listar los pedidos dto
     @GetMapping("/listar/{idUsuario}")
     public List<PedidoDTO> listarPedidosDTO(@PathVariable int idUsuario){
         return pedidoService.listarPedidosDTO(idUsuario);
     }
-   
 
-    // @GetMapping("/listar")
-    // public List<Almacen> listarAlmacenes() {
-    //     return almacenService.listarAlmacenes();
-    // }
+    @GetMapping("/pendientes")
+    public List<PedidosPendientesDTO> listarPedidosPendientes() {
+        return pedidoService.listarPedidosPendientes();
+    }
+
     
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.DetallePedidoDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.PedidoDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.PedidosPendientesDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.ProductoDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.productoPedidoDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.DetallePedido;
@@ -106,7 +107,7 @@ public class PedidoService {
 
         return detallesPedido; // Retornamos la lista de detalles del pedido
     }
-    
+
     // metodo para generar un numero de pedido aleatorio de 8 digitos
     public static String generarNumeroPedido() {
         int length = 8;
@@ -121,19 +122,21 @@ public class PedidoService {
     }
 
     // metodo para listar los pedidos pendientes de un usuario por su id
-    public List<Pedido> listarPedidosPendientes(int idUsuario) {
-        return pedidoRepository.findByUsuarioIdAndEstado(idUsuario, "Pendiente");
-    }
+    // public List<Pedido> listarPedidosPendientes(int idUsuario) {
+    //     // return pedidoRepository.findByUsuarioId(idUsuario, "Pendiente");
+    //     return pedidoRepository.findByUsuarioIdAndEstado(idUsuario, "Pendiente");
+    // }
 
-    //metodo para listar los pedidos con el dto pedidoDTO
+    // metodo para listar los pedidos con el dto pedidoDTO
     public List<PedidoDTO> listarPedidosDTO(int idUsuario) {
-        List<Pedido> pedidos = pedidoRepository.findByUsuarioIdAndEstado(idUsuario, "Pendiente");
+        // List<Pedido> pedidos = pedidoRepository.findByUsuarioIdAndEstado(idUsuario, "Asignado");
+        List<Pedido> pedidos = pedidoRepository.findAll();
         return pedidos.stream().map(pedido -> {
             PedidoDTO dto = new PedidoDTO();
             dto.setIdPedido(pedido.getIdPedido());
             dto.setNumeroPedido(pedido.getNumeroPedido());
             dto.setFechaPedido(pedido.getFechaPedido().toString());
-            dto.setNombreUsuario(pedido.getUsuario().getNombre());  // Solo el nombre del usuario
+            dto.setNombreUsuario(pedido.getUsuario().getNombre()); // Solo el nombre del usuario
             dto.setTotal(pedido.getTotal());
             dto.setEstado(pedido.getEstado());
             dto.setTelefono(pedido.getTelefono());
@@ -143,52 +146,40 @@ public class PedidoService {
                 detalleDTO.setIdDetallePedido(detalle.getIdDetallePedido());
                 detalleDTO.setCantidad(detalle.getCantidad());
                 detalleDTO.setPrecio(detalle.getPrecio());
-    
+
                 ProductoDTO dtoProducto = new ProductoDTO();
                 dtoProducto.setNombre(detalle.getProducto().getNombre());
                 dtoProducto.setImagenURL(detalle.getProducto().getImagenUrl());
-                dtoProducto.setUnidadMedida(detalle.getProducto().getUnidadMedida().getNombre()); // Asignar la unidad de medida
+                dtoProducto.setUnidadMedida(detalle.getProducto().getUnidadMedida().getNombre()); // Asignar la unidad
+                                                                                                  // de medida
                 dtoProducto.setPrecio(detalle.getProducto().getPrecio());
                 detalleDTO.setProductos(Collections.singletonList(dtoProducto));
-    
+
                 return detalleDTO;
             }).collect(Collectors.toList()));
             return dto;
         }).collect(Collectors.toList());
     }
-    
 
-
-    // public List<PedidoDTO> listarPedidosDTO(int idUsuario) {
-    //     List<Pedido> pedidos = pedidoRepository.findByUsuarioIdAndEstado(idUsuario, "Pendiende");
-    //     return pedidos.stream().map(pedido -> {
-    //         PedidoDTO dto = new PedidoDTO();
-    //         dto.setIdPedido(pedido.getIdPedido());
-    //         dto.setNumeroPedido(pedido.getNumeroPedido());
-    //         dto.setFechaPedido(pedido.getFechaPedido().toString());
-    //         dto.setNombreUsuario(pedido.getUsuario().getNombre());  // Solo el nombre del usuario
-    //         dto.setTotal(pedido.getTotal());
-    //         dto.setEstado(pedido.getEstado());
-    //         dto.setTelefono(pedido.getTelefono());
-    //         dto.setDireccion(pedido.getDireccion());
-    //         dto.setDetalles(pedido.getDetalles().stream().map(detalle -> {
-    //             DetallePedidoDTO detalleDTO = new DetallePedidoDTO();
-    //             detalleDTO.setIdDetallePedido(detalle.getIdDetallePedido());
-    //             detalleDTO.setCantidad(detalle.getCantidad());
-    //             detalleDTO.setPrecio(detalle.getPrecio());
-    //             productoPedidoDTO productoDTO = new productoPedidoDTO();
-    //             productoDTO.setNombre(detalle.getProducto().getNombre());
-    //             productoDTO.setImagenUrl(detalle.getProducto().getImagenUrl());
-    //             detalleDTO.setProductos(Collections.singletonList(productoDTO));
-    //             return detalleDTO;
-    //         }).collect(Collectors.toList()));
-    //         return dto;
-    //     }).collect(Collectors.toList());
-    // }
+    // metodo para listar los pedidos pendientes
+    public List<PedidosPendientesDTO> listarPedidosPendientes() {
+        List<Object[]> resultados = pedidoRepository.listarPedidosPendientes();
+        List<PedidosPendientesDTO> pedidos = new ArrayList<>();
+    
+        for (Object[] resultado : resultados) {
+            PedidosPendientesDTO dto = new PedidosPendientesDTO();
+            dto.setIdPedido(((Number) resultado[0]).intValue());
+            dto.setCliente((String) resultado[1]);
+            dto.setNumeroPedido((String) resultado[2]);
+            dto.setDireccion((String) resultado[3]);
+            dto.setTelefono((String) resultado[4]);
+            dto.setTotalProductos(((Number) resultado[5]).intValue());
+            dto.setTotalUnidades(((Number) resultado[6]).intValue());
+            pedidos.add(dto);
+        }
+    
+        return pedidos;
+    }
     
     
-    
-    
-
-
 }

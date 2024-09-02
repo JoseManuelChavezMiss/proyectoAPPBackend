@@ -20,8 +20,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloRutas.RutaReparti
 
 @RestController
 @RequestMapping("/rutaRepartidor")
-@CrossOrigin(origins = "*")
-// @CrossOrigin( origins = "http://aguasanta.store/")
+//@CrossOrigin(origins = "*")
+@CrossOrigin( origins = "http://aguasanta.store/")
 public class RutaRepartidorController {
 
     @Autowired

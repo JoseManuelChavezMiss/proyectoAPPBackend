@@ -18,8 +18,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloVentas.VentaServi
 
 @RestController
 @RequestMapping("/venta")
-@CrossOrigin(origins = "*")
-//@CrossOrigin( origins = "http://aguasanta.store/")
+//@CrossOrigin(origins = "*")
+@CrossOrigin( origins = "https://aguasanta.store/")
 public class VentaController {
 
     @Autowired

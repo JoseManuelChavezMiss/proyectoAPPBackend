@@ -29,23 +29,23 @@ public class PedidosController {
     PedidoService pedidoService;
 
     //metodo para crear un pedido
-    @PostMapping("/crear")
-    public ResponseEntity<Mensaje> crearPedido(@RequestBody List<productoPedidoDTO> productos){
+      @PostMapping("/crear")
+    public ResponseEntity<Mensaje> crearPedido(@RequestBody List<productoPedidoDTO> productos) {
         try {
+            String telefono = productos.get(0).getTelefono();
+            String direccion = productos.get(0).getDireccion();
+            
+            if (telefono == null || telefono.trim().isEmpty() || direccion == null || direccion.trim().isEmpty()) {
+                return new ResponseEntity<>(new Mensaje("Error al crear el pedido: teléfono y dirección son obligatorios"), HttpStatus.BAD_REQUEST);
+            }
+            
             pedidoService.crearPedido(productos);
             return new ResponseEntity<>(new Mensaje("Pedido creado correctamente"), HttpStatus.OK);
-
+    
         } catch (Exception e) {
             return new ResponseEntity<>(new Mensaje("Error al crear el pedido"), HttpStatus.BAD_REQUEST);
         }
-        
     }
-
-    //metodo para obtener los pedidos pendientes de un usuario
-    // @GetMapping("/pendientes/{idUsuario}")
-    // public List<Pedido> obtenerPedidosPendientes(@PathVariable int idUsuario){
-    //     return pedidoService.listarPedidosPendientes(idUsuario);
-    // }
 
     //metodo para listar los pedidos dto
     @GetMapping("/listar/{idUsuario}")

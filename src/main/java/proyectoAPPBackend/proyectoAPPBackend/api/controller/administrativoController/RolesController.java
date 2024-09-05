@@ -17,8 +17,8 @@ import proyectoAPPBackend.proyectoAPPBackend.security.service.RolService;
 
 @RestController
 @RequestMapping("/roles")
-//@CrossOrigin( origins = "*")
-@CrossOrigin( origins = "https://aguasanta.store/")
+@CrossOrigin( origins = "*")
+//@CrossOrigin( origins = "https://aguasanta.store/")
 public class RolesController {
 
     @Autowired

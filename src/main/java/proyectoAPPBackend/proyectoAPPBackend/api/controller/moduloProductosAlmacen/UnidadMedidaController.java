@@ -21,8 +21,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloProductosAlmacen.
 
 @RestController
 @RequestMapping("/unidadMedida")
-//@CrossOrigin( origins = "*")
-@CrossOrigin( origins = "https://aguasanta.store/")
+@CrossOrigin( origins = "*")
+//@CrossOrigin( origins = "https://aguasanta.store/")
 public class UnidadMedidaController {
 
     @Autowired

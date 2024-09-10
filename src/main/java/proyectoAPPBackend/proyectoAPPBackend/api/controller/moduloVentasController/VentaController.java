@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOVenta.DetalleVentaDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOVenta.DetalleVentaPedidoDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloVentas.VentaService;
 
 @RestController
@@ -41,6 +42,20 @@ public class VentaController {
     public ResponseEntity<Mensaje> cargarCamion(@RequestBody List<DetalleVentaDTO>  venta) {
         try {
             ventaService.generarVenta(venta);
+            return ResponseEntity.ok(new Mensaje("Venta realizada correctamente"));
+        } catch (RuntimeException e) {
+            // Manejo de excepciones específicas de la aplicación
+            return ResponseEntity.badRequest().body(new Mensaje("Error: " + e.getMessage()));
+        } catch (Exception e) {
+            // Manejo de cualquier otra excepción no controlada
+            return ResponseEntity.internalServerError().body(new Mensaje("Error al realizar la venta: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/generarVentaPedido")
+    public ResponseEntity<Mensaje> generarVentaPedido(@RequestBody List<DetalleVentaPedidoDTO>  venta) {
+        try {
+            ventaService.generarVentaPedido(venta);
             return ResponseEntity.ok(new Mensaje("Venta realizada correctamente"));
         } catch (RuntimeException e) {
             // Manejo de excepciones específicas de la aplicación

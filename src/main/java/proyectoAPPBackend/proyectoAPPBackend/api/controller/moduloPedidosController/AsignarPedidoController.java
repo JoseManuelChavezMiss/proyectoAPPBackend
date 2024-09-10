@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.AsignacionPedidoDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.AsignacionPedidosListaDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.PedidosPendientesDetalleDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.PedidosPendientesRepartidorDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloPedido.AsignarPedidoService;
 
 @RestController
@@ -37,8 +39,9 @@ public class AsignarPedidoController {
     }
 
     //metodo para listar
-    @GetMapping("/listarPedidosRepartidor/{idRepartidor}/{opcion}")
+    @GetMapping("/listarPedidosAsignados/{opcion}/{idRepartidor}")
     public List<AsignacionPedidosListaDTO> listarPedidosRepartidor(@PathVariable int idRepartidor, @PathVariable int opcion) {
+        System.err.println("idRepartidor: " + idRepartidor + " opcion: " + opcion);
         return asignarPedidoService.listarPedidosAsignados(idRepartidor, opcion);
     }
 
@@ -46,6 +49,18 @@ public class AsignarPedidoController {
     public ResponseEntity<Mensaje> eliminarAsignacionPedido(@PathVariable int idAsignacionPedido) {
         asignarPedidoService.eliminarAsignacionPedido(idAsignacionPedido);
         return new ResponseEntity<>(new Mensaje("Asignación eliminada correctamente"), HttpStatus.OK);
+    }
+
+    //metod para listar los pedidos asignados a un repartidor
+    @GetMapping("/listarPedidosRepartidor/{idRepartidor}/{opcion}")
+    public List<PedidosPendientesRepartidorDTO> listarPedidosAsignados(@PathVariable int opcion, @PathVariable int idRepartidor) {
+        System.err.println("idRepartidor: " + idRepartidor + " opcion: " + opcion);
+        return asignarPedidoService.listarPedidosPendientesRepartidor(opcion, idRepartidor);
+    }
+
+    @GetMapping("/listarPedidosDetalle/{idPedido}")
+    public List< PedidosPendientesDetalleDTO> listarPedidosDetalle(@PathVariable int idPedido) {
+        return asignarPedidoService.listarPedidosDetallePendientes(idPedido);
     }
 
 }

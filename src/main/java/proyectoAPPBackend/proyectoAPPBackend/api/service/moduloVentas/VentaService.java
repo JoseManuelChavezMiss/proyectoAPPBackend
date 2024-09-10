@@ -9,14 +9,17 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOVenta.DetalleVentaDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOVenta.DetalleVentaPedidoDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOVenta.VentaCargaCamionDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOVenta.VentaListaUsuariosDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen.Producto;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloVentas.DetalleVenta;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloVentas.Venta;
+import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloPedido.PedidoRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloProductosAlmacen.ProductoRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloVentas.VentaRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloCargaCamion.CargarCamionService;
+import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.Pedido;
 
 @Service
 @Transactional
@@ -30,6 +33,9 @@ public class VentaService {
 
     @Autowired
     ProductoRepository productoRepository;
+
+    @Autowired
+    PedidoRepository pedidoRepository;
 
     // meto para listar los usuarios por el rol de cliente o por rol generico
     public List<VentaListaUsuariosDTO> listarUsuariosPorRolVenta(int valor) {
@@ -52,7 +58,7 @@ public class VentaService {
     public List<VentaCargaCamionDTO> listarCargaCamionRepartidor(int idUsuario) {
         List<Object[]> resultados = ventaRepository.obtenerCargasCamionDelDiaPorUsuario(idUsuario);
         List<VentaCargaCamionDTO> carga = new ArrayList<>();
-    
+
         for (Object[] resultado : resultados) {
             VentaCargaCamionDTO dto = new VentaCargaCamionDTO();
             dto.setIdCargarCamion(((Number) resultado[0]).intValue());
@@ -66,39 +72,76 @@ public class VentaService {
         return carga;
     }
 
-
-    //Metodo para generar el detalle de la venta
+    // Metodo para generar el detalle de la venta
     public List<DetalleVenta> generarDetalleVenta(Venta venta, List<DetalleVentaDTO> listaDetalleVenta) {
         List<DetalleVenta> detalleVenta = new ArrayList<>();
 
-        Producto verificarProducto = productoRepository.findById(listaDetalleVenta.get(0).getIdProducto())
-        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        
+        // Producto verificarProducto =
+        // productoRepository.findById(listaDetalleVenta.get(0).getIdProducto())
+        // .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
         for (DetalleVentaDTO detalleDTO : listaDetalleVenta) {
-            if(ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), detalleDTO.getIdProducto(), detalleDTO.getCantidad())){
+            // Obtener el producto por ID una sola vez
+            Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+            
+            if (ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), detalleDTO.getIdProducto(),
+                    detalleDTO.getCantidad())) {
                 DetalleVenta detalle = new DetalleVenta();
                 detalle.setVenta(venta);
                 System.out.println(detalleDTO.getIdProducto());
-                
-                // Obtener el producto por ID una sola vez
-                Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
-                        .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-                
+
                 detalle.setProducto(producto);
                 detalle.setCantidad(detalleDTO.getCantidad());
                 detalle.setPrecio(producto.getPrecio());
-        
+
                 detalleVenta.add(detalle);
-            }else {
-                throw new RuntimeException("No hay existencias suficientes del producto: " + verificarProducto.getNombre());
+            } else {
+                throw new RuntimeException(
+                        "No hay existencias suficientes del producto: " + producto.getNombre());
             }
-           
+
         }
         return detalleVenta;
     }
 
-    //metodo para genera la venta
-    public Venta generarVenta(List<DetalleVentaDTO> detalleVenta){
+    public List<DetalleVenta> generarDetalleVentaPedido(Venta venta, List<DetalleVentaPedidoDTO> listaDetalleVenta) {
+        List<DetalleVenta> detalleVenta = new ArrayList<>();
+
+        Producto verificarProducto = productoRepository.findById(listaDetalleVenta.get(0).getIdProducto())
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        for (DetalleVentaPedidoDTO detalleDTO : listaDetalleVenta) {
+            System.out.println("Producto: " + detalleDTO.getCantidad());
+
+            // Obtener el producto por ID para verificar el nombre en caso de error
+            Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
+                    .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+            System.out.println("Nombre: " + producto.getNombre() + ", IdRepartidor: " + detalleDTO.getIdRepartidor()
+                    + ", IdProducto: " + detalleDTO.getIdProducto() + ", Cantidad: " + detalleDTO.getCantidad());
+
+            // Verificar las existencias
+            if (ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), detalleDTO.getIdProducto(),
+                    detalleDTO.getCantidad())) {
+                DetalleVenta detalle = new DetalleVenta();
+                detalle.setVenta(venta);
+                detalle.setProducto(producto);
+                detalle.setCantidad(detalleDTO.getCantidad());
+                detalle.setPrecio(producto.getPrecio());
+
+                detalleVenta.add(detalle);
+            } else {
+                // Lanzar excepción con el nombre del producto que no tiene existencias
+                throw new RuntimeException("No hay existencias suficientes del producto: " + producto.getNombre());
+            }
+        }
+
+        return detalleVenta;
+    }
+
+    // metodo para genera la venta
+    public Venta generarVenta(List<DetalleVentaDTO> detalleVenta) {
         Venta venta = new Venta();
         venta.setRepartidor(cargarCamionService.buscarUsuarioPorId(detalleVenta.get(0).getIdRepartidor()));
         venta.setCliente(cargarCamionService.buscarUsuarioPorId(detalleVenta.get(0).getIdCliente()));
@@ -107,11 +150,34 @@ public class VentaService {
         List<DetalleVenta> detalles = generarDetalleVenta(venta, detalleVenta);
         venta.setDetalles(detalles);
         return ventaRepository.save(venta);
-        
+
     }
 
-    
-  
-    
+    // metodo para genera la venta pedido
+    public Venta generarVentaPedido(List<DetalleVentaPedidoDTO> detalleVenta) {
+        Venta venta = new Venta();
+        venta.setRepartidor(cargarCamionService.buscarUsuarioPorId(detalleVenta.get(0).getIdRepartidor()));
+        venta.setCliente(cargarCamionService.buscarUsuarioPorId(detalleVenta.get(0).getIdCliente()));
+        venta.setFechaVenta(detalleVenta.get(0).getFechaVenta());
+        venta.setTotalVenta(detalleVenta.get(0).getTotalVenta());
+        List<DetalleVenta> detalles = generarDetalleVentaPedido(venta, detalleVenta);
+        venta.setDetalles(detalles);
+        cambiarEstadoPedidoEntregado(detalleVenta.get(0).getIdPedido());
+        return ventaRepository.save(venta);
+
+    }
+
+    // Método para pasar el pedido de pendiente a entregado
+    public void cambiarEstadoPedidoEntregado(int idPedido) {
+        // Obtener el pedido por id
+        Pedido pedido = pedidoRepository.findById(idPedido)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+
+        // Cambiar el estado del pedido a "entregado"
+        pedido.setEstado("Entregado");
+
+        // Guardar el pedido actualizado en el repositorio
+        pedidoRepository.save(pedido);
+    }
 
 }

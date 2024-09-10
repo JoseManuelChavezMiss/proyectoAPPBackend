@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.AsignacionPedidosListaDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.PedidosPendientesDetalleDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOPedidos.PedidosPendientesRepartidorDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.AsignacionPedido;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.Pedido;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloPedido.AsignacionPedidoRepository;
@@ -82,10 +84,10 @@ public class AsignarPedidoService {
         }
     }
 
-    //listar pedidos asignados a los administradores o repartidores
-    public List<AsignacionPedidosListaDTO> listarPedidosAsignados(int idRepartidor, int opcion) {
+    //listar pedidos asignados para ver los pedidos asignados a los repartidores
+    public List<AsignacionPedidosListaDTO> listarPedidosAsignados(int opcion, int idRepartidor) {
         List<AsignacionPedidosListaDTO> asignaciones = new ArrayList<>();
-            List<Object[]> resultados = asignacionPedidoRepository.listarAsignacionePedidosRepartidor(idRepartidor, opcion);
+            List<Object[]> resultados = asignacionPedidoRepository.listarAsignacionePedidosRepartidor(opcion, idRepartidor);
     
             for (Object[] resultado : resultados) {
                 AsignacionPedidosListaDTO asignacionDTO = new AsignacionPedidosListaDTO();
@@ -107,6 +109,55 @@ public class AsignarPedidoService {
             }
     
         return asignaciones;
+    }
+
+    //listar pedidos asignados a los repartidores
+        public List<PedidosPendientesRepartidorDTO> listarPedidosPendientesRepartidor(int opcion, int idRepartidor) {
+        List<PedidosPendientesRepartidorDTO> pedidosPendientes = new ArrayList<>();
+        List<Object[]> resultados = asignacionPedidoRepository.listarAsignacionePedidosRepartidor(opcion, idRepartidor);
+    
+        for (Object[] resultado : resultados) {
+            PedidosPendientesRepartidorDTO pedidoPendiente = new PedidosPendientesRepartidorDTO();
+    
+            // Asignación en el orden especificado en la clase DTO
+            pedidoPendiente.setIdPedido(((Number) resultado[0]).intValue());
+            pedidoPendiente.setFechaAsignacion(resultado[1].toString());
+            pedidoPendiente.setNumeroPedido(resultado[2].toString());
+            pedidoPendiente.setNombreCliente(resultado[3].toString());
+            pedidoPendiente.setNombreUsuarioCliente(resultado[4].toString());
+            pedidoPendiente.setDireccionCliente(resultado[5].toString());
+            pedidoPendiente.setTelefonoCliente(resultado[6].toString());
+            pedidoPendiente.setTotalProductos(((Number) resultado[7]).intValue());
+            pedidoPendiente.setTotalPedido(((Number) resultado[8]).doubleValue());
+    
+            pedidosPendientes.add(pedidoPendiente);
+        }
+    
+        return pedidosPendientes;
+    }
+
+    public List<PedidosPendientesDetalleDTO> listarPedidosDetallePendientes(int idPedido) {
+        List<PedidosPendientesDetalleDTO> pedidosPendientes = new ArrayList<>();
+        List<Object[]> resultados = asignacionPedidoRepository.obtenerPedidoDetalle(idPedido);
+
+        for (Object[] resultado : resultados) {
+            PedidosPendientesDetalleDTO pedidoPendiente = new PedidosPendientesDetalleDTO();
+
+            // Asignación en el orden especificado en la clase DTO
+            pedidoPendiente.setIdPedido(((Number) resultado[0]).intValue());
+            pedidoPendiente.setFechaPedido(resultado[1].toString());
+            pedidoPendiente.setTotalVenta(((Number) resultado[2]).doubleValue());
+            pedidoPendiente.setIdProducto(((Number) resultado[3]).intValue());
+            pedidoPendiente.setNombreProducto(resultado[4].toString());
+            pedidoPendiente.setCantidad(((Number) resultado[5]).intValue());
+            pedidoPendiente.setPrecio(((Number) resultado[6]).doubleValue());
+            pedidoPendiente.setIdCliente(((Number) resultado[7]).intValue());
+            pedidoPendiente.setIdRepartidor(((Number) resultado[8]).intValue());
+
+            pedidosPendientes.add(pedidoPendiente);
+        }
+
+        return pedidosPendientes;
     }
 
     //metodo para eliminar la asignacion de un pedido y cambiar el estado del pedido a 'Pendiente'

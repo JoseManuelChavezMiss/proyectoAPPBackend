@@ -12,7 +12,10 @@ import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.Asignacion
 public interface AsignacionPedidoRepository extends JpaRepository<AsignacionPedido, Integer> {
 
     
-    @Query(value = "CALL sp_listarAsignacionePedidosRepartidor(:idRepartidor,:opcion)", nativeQuery = true)
-    List<Object[]> listarAsignacionePedidosRepartidor(int idRepartidor, int opcion);
+    @Query(value = "CALL sp_listarAsignacionePedidosRepartidor(:opcion,:idRepartidor)", nativeQuery = true)
+    List<Object[]> listarAsignacionePedidosRepartidor(int opcion, int idRepartidor);
+
+    @Query(value = "CALL sp_obtenerPedidoDetalle(:idPedido)", nativeQuery = true)
+    List<Object[]> obtenerPedidoDetalle(int idPedido);
     
 }

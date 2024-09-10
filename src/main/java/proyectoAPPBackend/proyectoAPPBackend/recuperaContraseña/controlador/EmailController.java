@@ -24,8 +24,8 @@ import proyectoAPPBackend.proyectoAPPBackend.security.service.UsuarioService;
 
 @RestController
 @RequestMapping("/email")
-//@CrossOrigin(origins = "*")
-@CrossOrigin(origins = "https://aguasanta.store/")
+@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "https://aguasanta.store/")
 public class EmailController {
 
     // inyectamos el servicio de emial

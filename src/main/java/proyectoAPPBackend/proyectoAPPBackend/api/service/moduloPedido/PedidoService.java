@@ -22,6 +22,7 @@ import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.Pedido;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloPedido.DetallePedidoRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloPedido.PedidoRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloProductosAlmacen.ProductoRepository;
+import proyectoAPPBackend.proyectoAPPBackend.recuperaContraseña.servicios.EmailService;
 import proyectoAPPBackend.proyectoAPPBackend.security.entity.Usuario;
 import proyectoAPPBackend.proyectoAPPBackend.security.repository.UsuarioRepository;
 
@@ -42,6 +43,9 @@ public class PedidoService {
     @Autowired
     ProductoRepository productoRepository;
 
+    @Autowired
+    EmailService emailService;
+
 
     public Pedido crearPedido(List<productoPedidoDTO> productos) {
 
@@ -58,9 +62,8 @@ public class PedidoService {
         // generar y asignar los detalles del pedido
         List<DetallePedido> detalles = generarDetallesPedido(pedido, productos);
         pedido.setDetalles(detalles);
-
+        emailService.enviarEmailPedido(pedido);
         return pedidoRepository.save(pedido);
-
     }
 
     // metodo para encontrar el usuario por su id
@@ -176,6 +179,8 @@ public class PedidoService {
     
         return pedidos;
     }
+
+    
 
     
     

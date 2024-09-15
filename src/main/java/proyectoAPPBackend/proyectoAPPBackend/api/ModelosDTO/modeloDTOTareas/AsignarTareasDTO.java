@@ -15,5 +15,7 @@ public class AsignarTareasDTO {
     private int idUsuario;
     private LocalDate fechaInicio;
     private String periodicidad;
+    private Boolean incluirSabados;
+    private Boolean incluirDomingos;
     
 }

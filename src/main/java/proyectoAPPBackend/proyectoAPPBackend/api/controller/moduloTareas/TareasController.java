@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.AsignarTareasDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.TareasPendientesGeneralDTO;
-import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.AsignarTareas;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.Tareas;
 import org.springframework.web.bind.annotation.RequestBody;
 

@@ -33,7 +33,7 @@ public class RutaRepartidorController {
         return rutaRepartidorService.listarRepartidoresActivos();
     }
 
-    // metodo para guardar una ruta al repartidor
+    // metodo para asignar ruta una ruta al repartidor
     @PostMapping("/guardarRutaRepartidor")
     public ResponseEntity<Mensaje> guardarRutaRepartidor(@RequestBody rutaRepartidor rutaRepartidor) {
         try {

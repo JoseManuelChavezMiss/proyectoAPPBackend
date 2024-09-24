@@ -30,5 +30,7 @@ public class AsignarTareasDetalle {
 
     private LocalDate fechaEjecucion;  // Fecha en que se debe ejecutar la tarea
 
-    private String estado;  // Estado de esta instancia específica (Asignado, En Proceso, Terminada)
+    @ManyToOne
+    @JoinColumn(name = "id_estados_tarea")
+    private EstadosTarea estadosTarea;  // Estado de la tarea
 }

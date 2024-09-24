@@ -36,7 +36,7 @@ public class VehiculoService {
         Vehiculo vehiculoModificado = vehiculoRepository.findById(vehiculo.getIdVehiculo()).get();
         vehiculoModificado.setNombre(vehiculo.getNombre());
         vehiculoModificado.setMarca(vehiculo.getMarca());
-        vehiculoModificado.setPlaca(vehiculo.getMarca());
+        vehiculoModificado.setPlaca(vehiculo.getPlaca());
         vehiculoModificado.setModelo(vehiculo.getModelo());
         vehiculoModificado.setCapacidadAlmacenaje(vehiculo.getCapacidadAlmacenaje());
         vehiculoModificado.setPlaca(vehiculo.getPlaca());

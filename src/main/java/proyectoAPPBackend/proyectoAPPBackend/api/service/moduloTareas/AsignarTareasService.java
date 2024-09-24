@@ -17,6 +17,7 @@ import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.AsignarTar
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.Tareas;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloTareas.AsignarTareasDetalleRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloTareas.AsignarTareasRepository;
+import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloTareas.EstadosTareasRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloTareas.TareasRepository;
 import proyectoAPPBackend.proyectoAPPBackend.security.entity.Usuario;
 import proyectoAPPBackend.proyectoAPPBackend.security.repository.UsuarioRepository;
@@ -37,11 +38,12 @@ public class AsignarTareasService {
     @Autowired
     AsignarTareasDetalleRepository asignarTareasDetalleRepository;
 
+    @Autowired
+    EstadosTareasRepository estadosTareasRepository;
+
     public String asignarTareaConDetalles(AsignarTareasDTO request) {
         // Crear la asignación de tarea principal
         AsignarTareas asignacion = new AsignarTareas();
-        System.out.println("ID TAREA: " + request.getIdTarea());
-        System.out.println("ID USUARIO: " + request.getIdUsuario());
         asignacion.setTareas(buscarTareaPorId(request.getIdTarea()));
         asignacion.setUsuario(buscarUsuarioPorId(request.getIdUsuario()));
         asignacion.setFechaInicio(request.getFechaInicio());
@@ -69,7 +71,7 @@ public class AsignarTareasService {
             AsignarTareasDetalle detalle = new AsignarTareasDetalle();
             detalle.setAsignarTareas(asignacionGuardada);
             detalle.setFechaEjecucion(fechaActual);
-            detalle.setEstado("Asignado");
+            detalle.setEstadosTarea(estadosTareasRepository.findById(1).get());
             detalles.add(detalle);
 
             // Incrementar la fecha según la periodicidad
@@ -82,43 +84,6 @@ public class AsignarTareasService {
         // Retornar el mensaje de éxito
         return "Excelente, guardado";
     }
-
-    // public String asignarTareaConDetalles(AsignarTareasDTO request) {
-    // // Crear la asignación de tarea principal
-    // AsignarTareas asignacion = new AsignarTareas();
-    // System.out.println("ID TAREA: " + request.getIdTarea());
-    // System.out.println("ID USUARIO: " + request.getIdUsuario());
-    // asignacion.setTareas(buscarTareaPorId(request.getIdTarea()));
-    // asignacion.setUsuario(buscarUsuarioPorId(request.getIdUsuario()));
-    // asignacion.setFechaInicio(request.getFechaInicio());
-    // asignacion.setPeriodicidad(request.getPeriodicidad());
-    // asignacion.setEstado("Asignado");
-
-    // // Guardar la asignación principal
-    // AsignarTareas asignacionGuardada = asignarTareasRepository.save(asignacion);
-
-    // // Crear los detalles de las tareas recurrentes
-    // List<AsignarTareasDetalle> detalles = new ArrayList<>();
-    // LocalDate fechaActual = request.getFechaInicio();
-    // int cantidadRepeticiones = calcularRepeticiones(request.getPeriodicidad());
-
-    // for (int i = 0; i < cantidadRepeticiones; i++) {
-    // AsignarTareasDetalle detalle = new AsignarTareasDetalle();
-    // detalle.setAsignarTareas(asignacionGuardada);
-    // detalle.setFechaEjecucion(fechaActual);
-    // detalle.setEstado("Asignado");
-    // detalles.add(detalle);
-
-    // // Incrementar la fecha según la periodicidad
-    // fechaActual = calcularProximaFecha(fechaActual, request.getPeriodicidad());
-    // }
-
-    // // Guardar los detalles de la tarea
-    // asignarTareasDetalleRepository.saveAll(detalles);
-
-    // // Retornar el mensaje de éxito
-    // return "Excelente, guardado";
-    // }
 
     // MEMTODO PARA LISTAR LAS TAREAS ASIGNADAS
     public List<AsignarTareas> listarAsignarTareas() {
@@ -166,28 +131,6 @@ public class AsignarTareasService {
         }
     }
 
-    // private LocalDate calcularProximaFecha(LocalDate fechaActual, String
-    // periodicidad) {
-    // switch (periodicidad.toLowerCase()) {
-    // case "diario":
-    // return fechaActual.plus(1, ChronoUnit.DAYS);
-    // case "semanal":
-    // return fechaActual.plus(1, ChronoUnit.WEEKS);
-    // case "quincenal":
-    // return fechaActual.plus(2, ChronoUnit.WEEKS);
-    // case "mensual":
-    // return fechaActual.plus(1, ChronoUnit.MONTHS);
-    // case "trimestral":
-    // return fechaActual.plus(3, ChronoUnit.MONTHS);
-    // case "semestral":
-    // return fechaActual.plus(6, ChronoUnit.MONTHS);
-    // case "anual":
-    // return fechaActual.plus(1, ChronoUnit.YEARS);
-    // default:
-    // throw new IllegalArgumentException("Periodicidad no válida");
-    // }
-
-    // }
     private LocalDate calcularProximaFecha(LocalDate fechaActual, String periodicidad) {
         switch (periodicidad.toLowerCase()) {
             case "diario":

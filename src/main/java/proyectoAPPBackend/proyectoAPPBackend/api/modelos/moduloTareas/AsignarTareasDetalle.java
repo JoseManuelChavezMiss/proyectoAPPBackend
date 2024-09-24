@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
 
-
 @Entity
 @Getter
 @Setter
@@ -23,7 +22,7 @@ public class AsignarTareasDetalle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    
     @ManyToOne
     @JoinColumn(name = "asignar_tareas_id")
     private AsignarTareas asignarTareas;  // Relación con la tarea principal

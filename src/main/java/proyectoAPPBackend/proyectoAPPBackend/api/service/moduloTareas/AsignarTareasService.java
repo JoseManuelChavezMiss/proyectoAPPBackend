@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.AsignarTareasDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.TareasAsignadasDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.AsignarTareas;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.AsignarTareasDetalle;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.Tareas;
@@ -170,6 +171,34 @@ public class AsignarTareasService {
                 throw new IllegalArgumentException("Periodicidad no válida");
         }
 
+    }
+
+    //Metodo para listar todas las tareas asignadas
+    public List<TareasAsignadasDTO> listarTareasAsignadasUsuario() {
+        List<Object[]> resultados = asignarTareasRepository.obtenerTareasAsignadas();
+        List<TareasAsignadasDTO> tareas = new ArrayList<>();
+
+        for (Object[] resultado : resultados) {
+            TareasAsignadasDTO dto = new TareasAsignadasDTO();
+            dto.setIdTareaAsignada((int) resultado[0]);
+            // dto.setFechaInicio((String) resultado[1]);
+            dto.setFechaInicio(resultado[1].toString());
+            dto.setPeriodicidad((String) resultado[2]);
+            dto.setNombreTarea((String) resultado[3]);
+            dto.setNombreUsuario((String) resultado[4]);
+            tareas.add(dto);
+        }
+        return tareas;
+    }
+
+    //Metodo para eliminar una tarea asignada
+    public String eliminarTareaAsignada(int idTareaAsignada) {
+        if (!asignarTareasRepository.existsById(idTareaAsignada)) {
+            return "Tarea no encontrada";
+        } else {
+            asignarTareasRepository.deleteById(idTareaAsignada);
+            return "Tarea eliminada";
+        }
     }
 
 }

@@ -16,6 +16,7 @@ import proyectoAPPBackend.proyectoAPPBackend.security.entity.Usuario;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @Entity
 @Getter
 @Setter
@@ -41,7 +42,7 @@ public class AsignarTareas {
     private LocalDate fechaInicio;  // Fecha de inicio de la asignación
 
     private String estado;  // Asignado, En Proceso, Terminada
-
+    
     @OneToMany(mappedBy = "asignarTareas", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AsignarTareasDetalle> detalles;  // Relación con los detalles de la tarea
 }

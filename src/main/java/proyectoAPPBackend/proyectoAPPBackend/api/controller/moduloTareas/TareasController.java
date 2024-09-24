@@ -5,12 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.AsignarTareasDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.TareasAsignadasDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.TareasPendientesGeneralDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.Tareas;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,6 +82,28 @@ public class TareasController {
     @GetMapping("/listarAsignadas")
     public List<TareasPendientesGeneralDTO> listarAsignarTareas() {
         return tareasService.listarTareasPendientesGeneral();
+    }
+
+    // metodo para listar las tareas asignadas
+    @GetMapping("/listarTareasAsignadasUsuario")
+    public List<TareasAsignadasDTO> listarTareasAsignadas() {
+        return asginarTareasService.listarTareasAsignadasUsuario();
+    }
+    
+    //metodo para eliminar una tarea asignada
+    @DeleteMapping("/eliminarTareaAsignada/{idTareaAsignada}")
+    public ResponseEntity<Mensaje> eliminarTareaAsignada(@PathVariable int idTareaAsignada) {
+        try {
+            String mensaje = asginarTareasService.eliminarTareaAsignada(idTareaAsignada);
+            return ResponseEntity.ok(new Mensaje(mensaje));
+        } catch (RuntimeException e) {
+            // Manejo de excepciones específicas de la aplicación
+            return ResponseEntity.badRequest().body(new Mensaje("Error: " + e.getMessage()));
+        } catch (Exception e) {
+            // Manejo de cualquier otra excepción no controlada
+            return ResponseEntity.internalServerError()
+                    .body(new Mensaje("Error al eliminar la tarea asignada: " + e.getMessage()));
+        }
     }
 
 }

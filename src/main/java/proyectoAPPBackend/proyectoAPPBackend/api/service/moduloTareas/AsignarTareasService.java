@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.AsignarTareasDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.DetalleTareasUsuarioDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.TareasAsignadasDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.AsignarTareas;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.AsignarTareasDetalle;
@@ -191,6 +192,26 @@ public class AsignarTareasService {
         return tareas;
     }
 
+    //metodo para listar detalle de las tareas asignadas a un usuario
+    public List<DetalleTareasUsuarioDTO> obtenerDetalleTareasUsuario(int idUsuario){
+        List<Object[]> resultados = asignarTareasRepository.obtenerDetalleTareasUsuario(idUsuario);
+        List<DetalleTareasUsuarioDTO> tareas = new ArrayList<>();
+
+        for (Object[] resultado : resultados) {
+            DetalleTareasUsuarioDTO dto = new DetalleTareasUsuarioDTO();
+            dto.setIdDetalleTarea((int) resultado[0]);
+            dto.setNombreUsuario((String) resultado[1]);
+            dto.setFechaEjecucion(resultado[2].toString());
+            dto.setColor((String) resultado[3]);
+            dto.setNombreTarea((String) resultado[4]);
+            dto.setDescripcionTarea((String) resultado[5]);
+            dto.setEstado((String) resultado[6]);
+            tareas.add(dto);
+        }
+        return tareas;
+        
+    }
+
     //Metodo para eliminar una tarea asignada
     public String eliminarTareaAsignada(int idTareaAsignada) {
         if (!asignarTareasRepository.existsById(idTareaAsignada)) {
@@ -199,6 +220,11 @@ public class AsignarTareasService {
             asignarTareasRepository.deleteById(idTareaAsignada);
             return "Tarea eliminada";
         }
+    }
+
+    //Metodo para cambiar el estado de las tareas Asignado, En Proceso, Finalizado
+    public void cambiarEstadoTarea(Integer idDetelle, Integer idUsuario, String direccion) {
+       asignarTareasRepository.cambiarEstadoTareaAsignada(idDetelle, idUsuario, direccion); 
     }
 
 }

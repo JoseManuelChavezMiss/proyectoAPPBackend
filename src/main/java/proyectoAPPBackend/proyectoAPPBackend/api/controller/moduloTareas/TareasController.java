@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.AsignarTareasDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.CambiarEstadosDTO;
+import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.DetalleTareasUsuarioDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.TareasAsignadasDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modeloDTOTareas.TareasPendientesGeneralDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloTareas.Tareas;
@@ -103,6 +105,28 @@ public class TareasController {
             // Manejo de cualquier otra excepción no controlada
             return ResponseEntity.internalServerError()
                     .body(new Mensaje("Error al eliminar la tarea asignada: " + e.getMessage()));
+        }
+    }
+
+    //metodo para listar detalle de las tareas asignadas a un usuario
+    @GetMapping("/detalleTareasUsuario/{idUsuario}")
+    public List<DetalleTareasUsuarioDTO> obtenerDetalleTareasUsuario(@PathVariable int idUsuario) {
+        return asginarTareasService.obtenerDetalleTareasUsuario(idUsuario);
+    }
+
+    //metodo para cambiar el estado de las tareas Asignado, En Proceso, Finalizado
+    @PostMapping("/cambiarEstadoTarea")
+    public ResponseEntity<Mensaje> cambiarEstadoTarea(@RequestBody CambiarEstadosDTO tarea) {
+        try {
+            asginarTareasService.cambiarEstadoTarea(tarea.getIdDetalle(), tarea.getIdUsuario(), tarea.getDireccion());
+            return ResponseEntity.ok(new Mensaje("Estado de la tarea cambiado correctamente"));
+        } catch (RuntimeException e) {
+            // Manejo de excepciones específicas de la aplicación
+            return ResponseEntity.badRequest().body(new Mensaje("Error: " + e.getMessage()));
+        } catch (Exception e) {
+            // Manejo de cualquier otra excepción no controlada
+            return ResponseEntity.internalServerError()
+                    .body(new Mensaje("Error al cambiar el estado de la tarea: " + e.getMessage()));
         }
     }
 

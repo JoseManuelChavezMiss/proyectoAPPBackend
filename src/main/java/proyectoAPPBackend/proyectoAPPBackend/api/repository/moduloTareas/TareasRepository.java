@@ -14,4 +14,6 @@ public interface TareasRepository extends JpaRepository<Tareas, Integer> {
     @Query(value = "CALL sp_listarTareasPendientesGeneral()", nativeQuery = true)
     List<Object[]> listarTareasPendientesGeneral();
 
+
+
 }

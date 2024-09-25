@@ -14,6 +14,12 @@ public interface AsignarTareasRepository extends JpaRepository<AsignarTareas, In
     @Query(value = "CALL sp_obtenerTareasAsignadas()", nativeQuery = true)
     List<Object[]> obtenerTareasAsignadas();
 
+    @Query(value = "CALL sp_obtenerDetalleTareasUsuario(:idUsuario)", nativeQuery = true)
+    List<Object[]> obtenerDetalleTareasUsuario(Integer idUsuario);
+
+    @Query(value = "CALL sp_cambiarEstadoTareaAsignada(:idDetelle,:idUsuario,:direccion)", nativeQuery = true)
+    void cambiarEstadoTareaAsignada(Integer idDetelle, Integer idUsuario, String direccion);
+
 
 
   

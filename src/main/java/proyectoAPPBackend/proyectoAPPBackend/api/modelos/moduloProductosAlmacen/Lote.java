@@ -1,7 +1,6 @@
 package proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen;
 
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import proyectoAPPBackend.proyectoAPPBackend.security.entity.Usuario;
 
 @Entity
 @Getter
@@ -26,7 +26,11 @@ public class Lote {
     @JoinColumn(name = "idProducto")
     @ManyToOne(optional = false)
     private Producto Producto;
-    // @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+
+    @JoinColumn(name = "idUsuario")
+    @ManyToOne(optional = false)
+    private Usuario Usuario;
+
     private String fechaProduccion;
     private Integer cantidadProduccion;
     private String observaciones;

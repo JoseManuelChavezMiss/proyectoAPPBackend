@@ -41,6 +41,13 @@ public class LoteController {
     @PostMapping("/guardar")
     public ResponseEntity<Mensaje> guardarLote(@RequestBody Lote lote){
 
+        System.out.println(lote.getFechaProduccion());
+        System.out.println(lote.getCantidadProduccion());
+        System.out.println(lote.getObservaciones());
+        System.out.println(lote.getProducto().getIdProducto());
+        System.out.println(lote.getUsuario().getId());
+        
+
         try {
             loteService.guardarLotes(lote);
             return new ResponseEntity<>(new Mensaje("Lote creado correctamente"), HttpStatus.OK);

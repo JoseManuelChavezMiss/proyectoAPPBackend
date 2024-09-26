@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloRutas.Vehiculo;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloRutas.rutaRepartidor;
 import proyectoAPPBackend.proyectoAPPBackend.security.entity.Usuario;
 
@@ -20,6 +21,9 @@ public interface RutaRepartidorRepository extends JpaRepository<rutaRepartidor, 
 
     //busca por usuario
     Optional<rutaRepartidor> findByUsuario(Usuario usuario);
+
+    //busca por vehiculo
+    Optional<rutaRepartidor> findByVehiculo(Vehiculo vehiculo);
 
     List<rutaRepartidor> findByUsuarioId(int idUsuario);
     

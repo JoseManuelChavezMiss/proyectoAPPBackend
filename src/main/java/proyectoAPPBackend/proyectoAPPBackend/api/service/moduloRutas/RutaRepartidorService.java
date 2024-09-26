@@ -18,8 +18,8 @@ public class RutaRepartidorService {
 
     @Autowired
     RutaRepartidorRepository rutaRepartidorRepository;
-    
-    //metodo para listar los repartidores activos
+
+    // metodo para listar los repartidores activos
     public List<RepartidorDTO> listarRepartidoresActivos() {
         List<Object[]> resultados = rutaRepartidorRepository.listarRepartidoresActivos();
         List<RepartidorDTO> repartidores = new ArrayList<>();
@@ -37,39 +37,69 @@ public class RutaRepartidorService {
         return repartidores;
     }
 
-    //metodo para guardar una ruta al repartidor
+    // metodo para guardar una ruta al repartidor
     public void guardarRutaRepartidor(rutaRepartidor RutaRepartidor) {
-        Optional<rutaRepartidor> asignacionExistente = rutaRepartidorRepository.findByUsuario(RutaRepartidor.getUsuario());
+        Optional<rutaRepartidor> asignacionExistente = rutaRepartidorRepository
+                .findByUsuario(RutaRepartidor.getUsuario());
         if (asignacionExistente.isPresent()) {
-            throw new RuntimeException("El usuario ya tiene una asignación existente. Elimine la asignación antes de crear una nueva.");
-        }else{
-            rutaRepartidorRepository.save(RutaRepartidor);
+            throw new RuntimeException(
+                    "El usuario ya tiene una asignación existente. Elimine la asignación antes de crear una nueva.");
+        } else {
+            // List<rutaRepartidor> asignacionExistenteVehiculo = rutaRepartidorRepository
+            // .findByVehiculo(RutaRepartidor.getVehiculo());
+            // if (!asignacionExistenteVehiculo.isEmpty()) {
+            // throw new RuntimeException(
+            // "El vehiculo ya tiene una asignación existente. Elimine la asignación antes
+            // de crear una nueva.");
+            // } else {
+            // rutaRepartidorRepository.save(RutaRepartidor);
+            // }
+
+            // verificar si el vehiculo ya tiene una ruta asignada
+            Optional<rutaRepartidor> asignacionExistenteVehiculo = rutaRepartidorRepository
+                    .findByVehiculo(RutaRepartidor.getVehiculo());
+            if (asignacionExistenteVehiculo.isPresent()) {
+                throw new RuntimeException(
+                        "El vehiculo ya tiene una asignación existente.Elimine la asignación antes de crear una nueva.");
+            } else {
+                rutaRepartidorRepository.save(RutaRepartidor);
+            }
+
         }
     }
 
     public void modificarRutaRepartidor(rutaRepartidor RutaRepartidor) {
-        rutaRepartidor rutaRepartidorModificado = rutaRepartidorRepository.findById(RutaRepartidor.getIdRutaRepartidor()).get();
-        rutaRepartidorModificado.setUsuario(RutaRepartidor.getUsuario());
-        rutaRepartidorModificado.setVehiculo(RutaRepartidor.getVehiculo());
-        rutaRepartidorModificado.setRuta(RutaRepartidor.getRuta());
-        rutaRepartidorRepository.save(rutaRepartidorModificado);
+        Optional<rutaRepartidor> asignacionExistenteVehiculo = rutaRepartidorRepository
+                .findByVehiculo(RutaRepartidor.getVehiculo());
+
+        if (asignacionExistenteVehiculo.isPresent()) {
+            throw new RuntimeException(
+                    "El vehiculo ya tiene una asignación existente.Elimine la asignación antes de crear una nueva.");
+        } else {
+            rutaRepartidor rutaRepartidorModificado = rutaRepartidorRepository
+                    .findById(RutaRepartidor.getIdRutaRepartidor()).get();
+            rutaRepartidorModificado.setUsuario(RutaRepartidor.getUsuario());
+
+            rutaRepartidorModificado.setVehiculo(RutaRepartidor.getVehiculo());
+            rutaRepartidorModificado.setRuta(RutaRepartidor.getRuta());
+            rutaRepartidorRepository.save(rutaRepartidorModificado);
+        }
+
     }
 
-    //metodo para eliminar una ruta asignada a un repartidor
+    // metodo para eliminar una ruta asignada a un repartidor
     public void eliminarRutaRepartidor(int idRutaRepartidor) {
         rutaRepartidorRepository.deleteById(idRutaRepartidor);
     }
 
-
-    //metodo para listar las rutas asignadas a un repartidor
+    // metodo para listar las rutas asignadas a un repartidor
     public List<rutaRepartidor> listarRutasRepartidor() {
         return rutaRepartidorRepository.findAll();
     }
 
-    //metodo para lista rutas asignadas a un repartidor por su id
+    // metodo para lista rutas asignadas a un repartidor por su id
     public List<rutaRepartidor> buscarRutaRepartidorId(int idUsuario) {
         return rutaRepartidorRepository.findByUsuarioId(idUsuario);
     }
-        
-    
+
 }

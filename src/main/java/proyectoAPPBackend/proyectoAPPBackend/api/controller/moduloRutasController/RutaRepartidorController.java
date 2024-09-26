@@ -60,7 +60,10 @@ public class RutaRepartidorController {
             System.out.println(rutaRepartidor.getVehiculo().getIdVehiculo());
             rutaRepartidorService.modificarRutaRepartidor(rutaRepartidor);
             return ResponseEntity.ok(new Mensaje("Ruta modificada correctamente"));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(new Mensaje(e.getMessage()));
+        }
+         catch (Exception e) {
             return ResponseEntity.badRequest().body(new Mensaje("Error al modificar la ruta"));
         }
     }

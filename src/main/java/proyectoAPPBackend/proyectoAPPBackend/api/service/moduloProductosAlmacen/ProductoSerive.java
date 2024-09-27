@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen.Almacen;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen.Producto;
+import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloProductosAlmacen.AlmacenRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloProductosAlmacen.ProductoRepository;
 
 @Service
@@ -27,6 +30,9 @@ public class ProductoSerive implements AlmacenamientoService {
 
     @Autowired
     private ProductoRepository productoRepository;
+
+    @Autowired
+    private AlmacenRepository almacenRepository;
 
     // private static final String mediaUrl = "http://localhost:8080/foto/foto/"; // La URL base donde están alojadas las
                                                                                // imágenes
@@ -115,6 +121,18 @@ public class ProductoSerive implements AlmacenamientoService {
     // lista todos los productos
     public List<Producto> listarProductos() {
         return productoRepository.findAll();
+    }
+
+    // Lista todos los productos con cantidad disponible
+    public List<Producto> listarProductosConDisponibilidad() {
+        // Obtener los almacenes con cantidad disponible mayor que 0
+        List<Almacen> almacenesDisponibles = almacenRepository.findByCantidadDisponibleGreaterThan(0);
+
+        // Filtrar los productos que tienen cantidad disponible
+        return almacenesDisponibles.stream()
+                .map(Almacen::getProducto)  // Obtener el producto de cada registro de almacén
+                .distinct()  // Evitar productos duplicados
+                .collect(Collectors.toList());
     }
 
     //metodo para modificar un producto

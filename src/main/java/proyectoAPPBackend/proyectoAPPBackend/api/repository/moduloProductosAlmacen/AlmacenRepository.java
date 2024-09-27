@@ -17,6 +17,10 @@ public interface AlmacenRepository extends JpaRepository<Almacen, Integer>{
 
     // List<Almacen> findByProductoIdProducto(Long idProducto);
     List<Almacen> findByIdAlmacen(Long productoId);
+
+
+    // Listar productos con cantidad disponible mayor a 0
+    List<Almacen> findByCantidadDisponibleGreaterThan(Integer cantidad);
     
     
     

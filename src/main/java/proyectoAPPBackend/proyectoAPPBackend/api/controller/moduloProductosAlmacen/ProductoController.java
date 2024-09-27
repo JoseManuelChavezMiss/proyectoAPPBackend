@@ -29,8 +29,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloProductosAlmacen.
 
 @RestController
 @RequestMapping("/producto")
-//@CrossOrigin(origins = "*")
-@CrossOrigin( origins = "https://aguasanta.store/")
+@CrossOrigin(origins = "*")
+//@CrossOrigin( origins = "https://aguasanta.store/")
 public class ProductoController {
 
     @Autowired
@@ -67,6 +67,12 @@ public class ProductoController {
     @GetMapping("/listar")
     public List<Producto> listarProductos() {
         return productoService.listarProductos();
+    }
+
+    //meto para listar productos por disponibilidad
+    @GetMapping("/listarDisponibles")
+    public List<Producto> listarProductosDisponibles() {
+        return productoService.listarProductosConDisponibilidad();
     }
 
     @PostMapping("/modificar")

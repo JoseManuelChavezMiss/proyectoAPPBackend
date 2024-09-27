@@ -12,6 +12,7 @@ public class Coordenadas {
     String idRepartidor;
     String telefono;
     String nombreUsuario;
+    String rolUsuario;
 
     
 }

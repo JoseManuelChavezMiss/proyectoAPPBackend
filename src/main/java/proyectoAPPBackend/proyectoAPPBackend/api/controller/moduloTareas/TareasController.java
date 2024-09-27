@@ -25,8 +25,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloTareas.TareasServ
 
 @RestController
 @RequestMapping("/tarea")
-//@CrossOrigin(origins = "*")
-@CrossOrigin( origins = "https://aguasanta.store/")
+@CrossOrigin(origins = "*")
+//@CrossOrigin( origins = "https://aguasanta.store/")
 public class TareasController {
 
     @Autowired
@@ -50,10 +50,42 @@ public class TareasController {
         }
     }
 
+    //metodo para modificar una tarea
+    @PostMapping("/modificar")
+    public ResponseEntity<Mensaje> modificarTarea(@RequestBody Tareas tarea) {
+        try {
+            tareasService.modificarTarea(tarea);
+            return ResponseEntity.ok(new Mensaje("Tarea modificada correctamente"));
+        } catch (RuntimeException e) {
+            // Manejo de excepciones específicas de la aplicación
+            return ResponseEntity.badRequest().body(new Mensaje("Error: " + e.getMessage()));
+        } catch (Exception e) {
+            // Manejo de cualquier otra excepción no controlada
+            return ResponseEntity.internalServerError()
+                    .body(new Mensaje("Error al modificar la tarea: " + e.getMessage()));
+        }
+    }
+
     // metodo para listar las tareas
     @GetMapping("/listar")
     public List<Tareas> listarTareas() {
         return tareasService.listarTareas();
+    }
+
+    //metodo para eliminar una tarea
+    @DeleteMapping("/eliminarTarea/{idTarea}")
+    public ResponseEntity<Mensaje> eliminarTarea(@PathVariable int idTarea) {
+        try {
+            tareasService.eliminarTarea(idTarea);
+            return ResponseEntity.ok(new Mensaje("Tarea eliminada correctamente"));
+        } catch (RuntimeException e) {
+            // Manejo de excepciones específicas de la aplicación
+            return ResponseEntity.badRequest().body(new Mensaje("Error: " + e.getMessage()));
+        } catch (Exception e) {
+            // Manejo de cualquier otra excepción no controlada
+            return ResponseEntity.internalServerError()
+                    .body(new Mensaje("Error al eliminar la tarea: " + e.getMessage()));
+        }
     }
 
     @PostMapping("/asignarTarea")

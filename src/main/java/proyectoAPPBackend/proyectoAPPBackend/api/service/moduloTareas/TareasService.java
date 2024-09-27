@@ -59,9 +59,19 @@ public class TareasService {
         return tareas;
     }
 
-    //metodo para eliminar una tarea
+    // metodo para eliminar una tarea
     public void eliminarTarea(Integer idTarea) {
         tareasRepository.deleteById(idTarea);
+    }
+
+    // metodo para modificar una tarea
+    public void modificarTarea(Tareas tarea) {
+        // verificar si el color de la tarea ya existe
+        if (tareasRepository.findByColor(tarea.getColor()) != null) {
+            throw new RuntimeException("El color de la tarea ya existe");
+        } else {
+            tareasRepository.save(tarea);
+        }
     }
 
 }

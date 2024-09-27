@@ -24,8 +24,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloPedido.AsignarPed
 
 @RestController
 @RequestMapping("/asignarPedido")
-@CrossOrigin(origins = "*")
-//@CrossOrigin( origins = "https://aguasanta.store/")
+//@CrossOrigin(origins = "*")
+@CrossOrigin( origins = "https://aguasanta.store/")
 public class AsignarPedidoController {
 
     @Autowired

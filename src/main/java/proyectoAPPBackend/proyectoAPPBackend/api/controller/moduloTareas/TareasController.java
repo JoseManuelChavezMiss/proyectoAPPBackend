@@ -25,7 +25,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloTareas.TareasServ
 
 @RestController
 @RequestMapping("/tarea")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
+@CrossOrigin( origins = "https://aguasanta.store/")
 public class TareasController {
 
     @Autowired

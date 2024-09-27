@@ -60,15 +60,16 @@ public class TareasController {
         try {
             // Llamamos al servicio para asignar la tarea y obtener el mensaje de éxito
             String mensaje = asginarTareasService.asignarTareaConDetalles(tarea);
-    
-            // Verificamos si el mensaje está vacío o nulo (opcional, dependiendo de tu lógica)
+
+            // Verificamos si el mensaje está vacío o nulo (opcional, dependiendo de tu
+            // lógica)
             if (mensaje == null || mensaje.isEmpty()) {
                 return ResponseEntity.badRequest().body(new Mensaje("No se pudo asignar la tarea"));
             }
-    
+
             // Devolvemos el mensaje de éxito
             return ResponseEntity.ok(new Mensaje(mensaje));
-    
+
         } catch (RuntimeException e) {
             // Manejo de excepciones específicas de la aplicación
             return ResponseEntity.badRequest().body(new Mensaje("Error: " + e.getMessage()));
@@ -78,7 +79,6 @@ public class TareasController {
                     .body(new Mensaje("Error al asignar la tarea: " + e.getMessage()));
         }
     }
-    
 
     // metodo para listar las tareas asignadas
     @GetMapping("/listarAsignadas")
@@ -91,8 +91,8 @@ public class TareasController {
     public List<TareasAsignadasDTO> listarTareasAsignadas() {
         return asginarTareasService.listarTareasAsignadasUsuario();
     }
-    
-    //metodo para eliminar una tarea asignada
+
+    // metodo para eliminar una tarea asignada
     @DeleteMapping("/eliminarTareaAsignada/{idTareaAsignada}")
     public ResponseEntity<Mensaje> eliminarTareaAsignada(@PathVariable int idTareaAsignada) {
         try {
@@ -108,13 +108,13 @@ public class TareasController {
         }
     }
 
-    //metodo para listar detalle de las tareas asignadas a un usuario
+    // metodo para listar detalle de las tareas asignadas a un usuario
     @GetMapping("/detalleTareasUsuario/{idUsuario}")
     public List<DetalleTareasUsuarioDTO> obtenerDetalleTareasUsuario(@PathVariable int idUsuario) {
         return asginarTareasService.obtenerDetalleTareasUsuario(idUsuario);
     }
 
-    //metodo para cambiar el estado de las tareas Asignado, En Proceso, Finalizado
+    // metodo para cambiar el estado de las tareas Asignado, En Proceso, Finalizado
     @PostMapping("/cambiarEstadoTarea")
     public ResponseEntity<Mensaje> cambiarEstadoTarea(@RequestBody CambiarEstadosDTO tarea) {
         try {
@@ -129,5 +129,9 @@ public class TareasController {
                     .body(new Mensaje("Error al cambiar el estado de la tarea: " + e.getMessage()));
         }
     }
+
+    //metodo para eliminar una tarea
+    // @DeleteMapping("/elminarTarea{idTarea}")
+    // public 
 
 }

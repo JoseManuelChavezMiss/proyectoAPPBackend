@@ -20,39 +20,48 @@ public class TareasService {
     @Autowired
     TareasRepository tareasRepository;
 
-    //metodo para crear una tareas
+    // metodo para crear una tareas
     public void guardarTarea(Tareas tarea) {
-        tareasRepository.save(tarea);
+        // verificar si el color de la tarea ya existe
+        if (tareasRepository.findByColor(tarea.getColor()) != null) {
+            throw new RuntimeException("El color de la tarea ya existe");
+        } else {
+            tareasRepository.save(tarea);
+        }
     }
 
-    //Metodo para lisrar las tareas
+    // Metodo para lisrar las tareas
     public List<Tareas> listarTareas() {
         return tareasRepository.findAll();
     }
 
     public List<TareasPendientesGeneralDTO> listarTareasPendientesGeneral() {
-    List<Object[]> resultados = tareasRepository.listarTareasPendientesGeneral();
-    List<TareasPendientesGeneralDTO> tareas = new ArrayList<>();
+        List<Object[]> resultados = tareasRepository.listarTareasPendientesGeneral();
+        List<TareasPendientesGeneralDTO> tareas = new ArrayList<>();
 
-    // Formato para las fechas
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        // Formato para las fechas
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    for (Object[] resultado : resultados) {
-        TareasPendientesGeneralDTO dto = new TareasPendientesGeneralDTO();
-        dto.setNombreUsuario((String) resultado[0]);
-        dto.setNombreTarea((String) resultado[1]);
-        dto.setDescripcionTarea((String) resultado[2]);
-        dto.setColorTarea((String) resultado[3]);
+        for (Object[] resultado : resultados) {
+            TareasPendientesGeneralDTO dto = new TareasPendientesGeneralDTO();
+            dto.setNombreUsuario((String) resultado[0]);
+            dto.setNombreTarea((String) resultado[1]);
+            dto.setDescripcionTarea((String) resultado[2]);
+            dto.setColorTarea((String) resultado[3]);
 
-        // Aquí convertimos la fecha
-        LocalDate fechaEjecucion = ((java.sql.Date) resultado[4]).toLocalDate();
-        dto.setFechaEjecucion(fechaEjecucion.format(formatter));
+            // Aquí convertimos la fecha
+            LocalDate fechaEjecucion = ((java.sql.Date) resultado[4]).toLocalDate();
+            dto.setFechaEjecucion(fechaEjecucion.format(formatter));
 
-        dto.setEstado((String) resultado[5]);
-        tareas.add(dto);
+            dto.setEstado((String) resultado[5]);
+            tareas.add(dto);
+        }
+        return tareas;
     }
-    return tareas;
-}
 
-    
+    //metodo para eliminar una tarea
+    public void eliminarTarea(Integer idTarea) {
+        tareasRepository.deleteById(idTarea);
+    }
+
 }

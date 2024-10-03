@@ -3,6 +3,7 @@ package proyectoAPPBackend.proyectoAPPBackend.api.controller.moduloProductosAlma
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -97,20 +99,6 @@ public class ProductoController {
         }
     }
 
-    // @DeleteMapping("/eliminar/{idProducto}")
-    // public ResponseEntity<Mensaje> eliminarProducto(@PathVariable int idProducto)
-    // {
-    // try {
-    // productoService.eliminarProducto(idProducto);
-    // Mensaje mensajeExito = new Mensaje("Producto eliminado exitosamente.");
-    // return ResponseEntity.ok(mensajeExito);
-    // } catch (Exception e) {
-    // Mensaje mensajeError = new Mensaje("Error al eliminar el producto: " +
-    // e.getMessage());
-    // return
-    // ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mensajeError);
-    // }
-    // }
     @DeleteMapping("/eliminar/{idProducto}")
     public ResponseEntity<Mensaje> eliminarProducto(@PathVariable int idProducto) {
         try {
@@ -127,28 +115,12 @@ public class ProductoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mensajeError);
         }
     }
-
-    // @DeleteMapping("/eliminar/{idProducto}")
-    // public ResponseEntity<Mensaje> eliminarProducto(@PathVariable int
-    // idProducto){
-    // Optional<Producto> producto = productoService.eliminarProducto(idProducto);
-    // if(producto.isPresent()){
-    // return ResponseEntity.ok(new Mensaje("Producto desactivado correctamente"));
-    // }else{
-    // return ResponseEntity.ok(new Mensaje("Error eliminada correctamente"));
-    // }
-    // }
-
-    // metodo para eliminar
-    // @DeleteMapping("/eliminarAlmacen/{idAlmacen}")
-    // public ResponseEntity<Mensaje> borrarCategoria(@PathVariable int idAlmacen) {
-    // Optional<Almacen> almacen = almacenService.eliminarAlmacen(idAlmacen);
-    // if(almacen.isPresent()){
-    // return ResponseEntity.ok(new Mensaje("Almacen eliminada correctamente"));
-    // }else{
-    // return ResponseEntity.badRequest().body(new Mensaje("Error al eliminar la
-    // almacen"));
-    // }
-    // }
+    
+    //actualiza el estado de retornable del producto
+    @PutMapping("estadoRetornable/{id}/{retornable}")
+    public Optional<Producto> actualizarRetornable(@PathVariable int id, @PathVariable boolean retornable) throws Exception {
+        return productoService.actualizarRetornable(id, retornable);
+    }
+    
 
 }

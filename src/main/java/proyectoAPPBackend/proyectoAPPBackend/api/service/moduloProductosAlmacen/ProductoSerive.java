@@ -34,8 +34,9 @@ public class ProductoSerive implements AlmacenamientoService {
     @Autowired
     private AlmacenRepository almacenRepository;
 
-    // private static final String mediaUrl = "http://localhost:8080/foto/foto/"; // La URL base donde están alojadas las
-                                                                               // imágenes
+    // private static final String mediaUrl = "http://localhost:8080/foto/foto/"; //
+    // La URL base donde están alojadas las
+    // imágenes
     @Value("${media.url}")
     private String mediaUrl; // La URL base donde están alojadas las imágenes
 
@@ -87,7 +88,6 @@ public class ProductoSerive implements AlmacenamientoService {
         return null;
     }
 
-
     // metodo qu enos permite buscar la foto y mostrar la foto
     @Override
     public Resource cargarRecurso(String nombreArchivo) {
@@ -109,7 +109,7 @@ public class ProductoSerive implements AlmacenamientoService {
     public void guardarProducto(Producto producto, MultipartFile archivo) {
 
         if (archivo != null) {
-            //utilizamos el metodo almacenamiento para guardar la imagen y obtener la url
+            // utilizamos el metodo almacenamiento para guardar la imagen y obtener la url
             String urlArchivo = almacenamiento(archivo);
             producto.setImagenUrl(urlArchivo);
             productoRepository.save(producto);
@@ -130,44 +130,70 @@ public class ProductoSerive implements AlmacenamientoService {
 
         // Filtrar los productos que tienen cantidad disponible
         return almacenesDisponibles.stream()
-                .map(Almacen::getProducto)  // Obtener el producto de cada registro de almacén
-                .distinct()  // Evitar productos duplicados
+                .map(Almacen::getProducto) // Obtener el producto de cada registro de almacén
+                .distinct() // Evitar productos duplicados
                 .collect(Collectors.toList());
     }
 
-    //metodo para modificar un producto
+    // metodo para modificar un producto
     public void modificarProducto(Producto producto, MultipartFile archivo) {
         // Verificar si el producto existe en la base de datos
         Optional<Producto> productoExistenteOpt = productoRepository.findByIdProducto(producto.getIdProducto());
         if (!productoExistenteOpt.isPresent()) {
             throw new RuntimeException("El producto no existe.");
         }
-    
+
         Producto productoExistente = productoExistenteOpt.get();
-    
+
         // Si se proporciona un archivo, actualizar la URL de la imagen
         if (archivo != null && !archivo.isEmpty()) {
             // Guardar el archivo y obtener la URL de la imagen actualizada
             String urlArchivo = almacenamiento(archivo);
             productoExistente.setImagenUrl(urlArchivo);
         }
-        // Si no se proporciona un archivo, la URL de la imagen existente se mantiene automáticamente
-    
+        // Si no se proporciona un archivo, la URL de la imagen existente se mantiene
+        // automáticamente
+
         // Actualizar otros campos del producto
         productoExistente.setNombre(producto.getNombre());
         productoExistente.setDescripcion(producto.getDescripcion());
         productoExistente.setUnidadMedida(producto.getUnidadMedida());
         productoExistente.setPrecio(producto.getPrecio());
         // Añadir cualquier otro campo que necesites actualizar
-    
+
         // Guardar el producto actualizado en la base de datos
         productoRepository.save(productoExistente);
     }
 
-    public void eliminarProducto(int idProducto){
+    public void eliminarProducto(int idProducto) {
         productoRepository.deleteById(idProducto);
     }
+
+    // Método para cambiar el valor de 'retornable'
+    public Optional<Producto> actualizarRetornable(int idProducto, boolean retornable) {
+        // Buscar el producto por su ID
+        Optional<Producto> productoOpt = productoRepository.findById(idProducto);
     
+        if (productoOpt.isPresent()) {
+            Producto producto = productoOpt.get();
+            
+            // Actualizar el campo 'retornable'
+            if (retornable == false) {
+                producto.setRetornable(false);
+            } else {
+                producto.setRetornable(true);
+            }
+            
+            // Guardar los cambios en la base de datos
+            productoRepository.save(producto);
+            
+            // Retornar el producto actualizado
+            return productoOpt;
+        } else {
+            // Si no se encuentra el producto, devolver Optional.empty()
+            return Optional.empty();
+        }
+    }
     
 
 }

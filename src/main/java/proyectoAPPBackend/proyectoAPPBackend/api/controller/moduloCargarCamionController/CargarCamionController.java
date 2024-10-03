@@ -20,8 +20,8 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloCargaCamion.Carga
 
 @RestController
 @RequestMapping("/cargarCamion")
-@CrossOrigin(origins = "*")
-//@CrossOrigin( origins = "https://aguasanta.store/")
+//@CrossOrigin(origins = "*")
+@CrossOrigin( origins = "https://aguasanta.store/")
 public class CargarCamionController {
 
     @Autowired

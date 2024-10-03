@@ -50,7 +50,6 @@ public class AsignarTareasService {
         asignacion.setUsuario(buscarUsuarioPorId(request.getIdUsuario()));
         asignacion.setFechaInicio(request.getFechaInicio());
         asignacion.setPeriodicidad(request.getPeriodicidad());
-        asignacion.setEstado("Asignado");
 
         // Guardar la asignación principal
         AsignarTareas asignacionGuardada = asignarTareasRepository.save(asignacion);

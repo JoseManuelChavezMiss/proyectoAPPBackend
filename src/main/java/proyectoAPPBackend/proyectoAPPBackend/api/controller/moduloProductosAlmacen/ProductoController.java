@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.validation.Valid;
 import org.springframework.core.io.Resource;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import proyectoAPPBackend.proyectoAPPBackend.Respuestas.Mensaje;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen.Producto;
@@ -30,7 +31,7 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloProductosAlmacen.
 @RestController
 @RequestMapping("/producto")
 @CrossOrigin(origins = "*")
-//@CrossOrigin( origins = "https://aguasanta.store/")
+// @CrossOrigin( origins = "https://aguasanta.store/")
 public class ProductoController {
 
     @Autowired
@@ -69,7 +70,7 @@ public class ProductoController {
         return productoService.listarProductos();
     }
 
-    //meto para listar productos por disponibilidad
+    // meto para listar productos por disponibilidad
     @GetMapping("/listarDisponibles")
     public List<Producto> listarProductosDisponibles() {
         return productoService.listarProductosConDisponibilidad();
@@ -95,20 +96,37 @@ public class ProductoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mensajeError);
         }
     }
-   
+
+    // @DeleteMapping("/eliminar/{idProducto}")
+    // public ResponseEntity<Mensaje> eliminarProducto(@PathVariable int idProducto)
+    // {
+    // try {
+    // productoService.eliminarProducto(idProducto);
+    // Mensaje mensajeExito = new Mensaje("Producto eliminado exitosamente.");
+    // return ResponseEntity.ok(mensajeExito);
+    // } catch (Exception e) {
+    // Mensaje mensajeError = new Mensaje("Error al eliminar el producto: " +
+    // e.getMessage());
+    // return
+    // ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mensajeError);
+    // }
+    // }
     @DeleteMapping("/eliminar/{idProducto}")
     public ResponseEntity<Mensaje> eliminarProducto(@PathVariable int idProducto) {
         try {
             productoService.eliminarProducto(idProducto);
             Mensaje mensajeExito = new Mensaje("Producto eliminado exitosamente.");
             return ResponseEntity.ok(mensajeExito);
+        } catch (DataIntegrityViolationException e) {
+            // Captura de la excepción de violación de integridad de datos (clave foránea)
+            Mensaje mensajeError = new Mensaje(
+                    "No se puede eliminar el producto porque está asociado a otro registro.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(mensajeError);
         } catch (Exception e) {
             Mensaje mensajeError = new Mensaje("Error al eliminar el producto: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mensajeError);
         }
     }
-
-
 
     // @DeleteMapping("/eliminar/{idProducto}")
     // public ResponseEntity<Mensaje> eliminarProducto(@PathVariable int

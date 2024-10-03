@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloRutas.RepartidorDTO;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloRutas.rutaRepartidor;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloRutas.RutaRepartidorRepository;
+import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloRutas.VehiculoRepository;
 
 @Service
 @Transactional
@@ -18,6 +19,9 @@ public class RutaRepartidorService {
 
     @Autowired
     RutaRepartidorRepository rutaRepartidorRepository;
+
+    @Autowired
+    VehiculoRepository vehiculoRepository;
 
     // metodo para listar los repartidores activos
     public List<RepartidorDTO> listarRepartidoresActivos() {
@@ -69,23 +73,48 @@ public class RutaRepartidorService {
     }
 
     public void modificarRutaRepartidor(rutaRepartidor RutaRepartidor) {
+        // Obtener la ruta actual del repartidor
+        rutaRepartidor rutaActual = rutaRepartidorRepository.findById(RutaRepartidor.getIdRutaRepartidor())
+                .orElseThrow(() -> new RuntimeException("No se encontró la ruta especificada."));
+
+        // Verificar si el vehículo que se quiere asignar ya tiene una ruta asignada
         Optional<rutaRepartidor> asignacionExistenteVehiculo = rutaRepartidorRepository
                 .findByVehiculo(RutaRepartidor.getVehiculo());
 
-        if (asignacionExistenteVehiculo.isPresent()) {
-            throw new RuntimeException(
-                    "El vehiculo ya tiene una asignación existente.Elimine la asignación antes de crear una nueva.");
-        } else {
-            rutaRepartidor rutaRepartidorModificado = rutaRepartidorRepository
-                    .findById(RutaRepartidor.getIdRutaRepartidor()).get();
-            rutaRepartidorModificado.setUsuario(RutaRepartidor.getUsuario());
-
-            rutaRepartidorModificado.setVehiculo(RutaRepartidor.getVehiculo());
-            rutaRepartidorModificado.setRuta(RutaRepartidor.getRuta());
-            rutaRepartidorRepository.save(rutaRepartidorModificado);
+        // Si el vehículo ya tiene asignación y no es el mismo vehículo que ya tenía el
+        // repartidor
+        if (asignacionExistenteVehiculo.isPresent() && !asignacionExistenteVehiculo.get().getUsuario()
+                .equals(rutaActual.getUsuario())) {
+            throw new RuntimeException("El vehículo ya está asignado a otro repartidor.");
         }
 
+        // Permitir la modificación si es el mismo vehículo o uno nuevo sin asignación
+        rutaActual.setUsuario(RutaRepartidor.getUsuario());
+        rutaActual.setVehiculo(RutaRepartidor.getVehiculo());
+        rutaActual.setRuta(RutaRepartidor.getRuta());
+        rutaRepartidorRepository.save(rutaActual);
     }
+
+    // public void modificarRutaRepartidor(rutaRepartidor RutaRepartidor) {
+    // Optional<rutaRepartidor> asignacionExistenteVehiculo =
+    // rutaRepartidorRepository
+    // .findByVehiculo(RutaRepartidor.getVehiculo());
+
+    // if (asignacionExistenteVehiculo.isPresent()) {
+    // throw new RuntimeException(
+    // "El vehiculo ya tiene una asignación existente.Elimine la asignación antes de
+    // crear una nueva.");
+    // } else {
+    // rutaRepartidor rutaRepartidorModificado = rutaRepartidorRepository
+    // .findById(RutaRepartidor.getIdRutaRepartidor()).get();
+    // rutaRepartidorModificado.setUsuario(RutaRepartidor.getUsuario());
+
+    // rutaRepartidorModificado.setVehiculo(RutaRepartidor.getVehiculo());
+    // rutaRepartidorModificado.setRuta(RutaRepartidor.getRuta());
+    // rutaRepartidorRepository.save(rutaRepartidorModificado);
+    // }
+
+    // }
 
     // metodo para eliminar una ruta asignada a un repartidor
     public void eliminarRutaRepartidor(int idRutaRepartidor) {

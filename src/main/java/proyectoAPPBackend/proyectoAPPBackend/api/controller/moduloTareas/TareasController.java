@@ -26,7 +26,7 @@ import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloTareas.TareasServ
 @RestController
 @RequestMapping("/tarea")
 @CrossOrigin(origins = "*")
-//@CrossOrigin( origins = "https://aguasanta.store/")
+// @CrossOrigin( origins = "https://aguasanta.store/")
 public class TareasController {
 
     @Autowired
@@ -50,7 +50,7 @@ public class TareasController {
         }
     }
 
-    //metodo para modificar una tarea
+    // metodo para modificar una tarea
     @PostMapping("/modificar")
     public ResponseEntity<Mensaje> modificarTarea(@RequestBody Tareas tarea) {
         try {
@@ -72,7 +72,7 @@ public class TareasController {
         return tareasService.listarTareas();
     }
 
-    //metodo para eliminar una tarea
+    // metodo para eliminar una tarea
     @DeleteMapping("/eliminarTarea/{idTarea}")
     public ResponseEntity<Mensaje> eliminarTarea(@PathVariable int idTarea) {
         try {
@@ -90,8 +90,26 @@ public class TareasController {
 
     @PostMapping("/asignarTarea")
     public ResponseEntity<?> asignarTarea(@RequestBody AsignarTareasDTO tarea) {
+        // Verificar que los campos requeridos no estén vacíos o nulos
+        if (tarea.getIdTarea() <= 0) {
+            return ResponseEntity.badRequest()
+                    .body(new Mensaje("Error: El campo 'idTarea' debe ser un número positivo"));
+        }
+        if (tarea.getIdUsuario() <= 0) {
+            return ResponseEntity.badRequest()
+                    .body(new Mensaje("Error: El campo 'idUsuario' debe ser un número positivo"));
+        }
+        if (tarea.getFechaInicio() == null) {
+            return ResponseEntity.badRequest().body(new Mensaje("Error: El campo 'fechaInicio' es requerido"));
+        }
+        if (tarea.getPeriodicidad() == null || tarea.getPeriodicidad().isEmpty()) {
+            return ResponseEntity.badRequest().body(new Mensaje("Error: El campo 'periodicidad' es requerido"));
+        }
+
+        // Mostrar los valores recibidos
         System.out.println(tarea.getIdTarea() + " " + tarea.getIdUsuario() + " " + tarea.getFechaInicio() + " "
-                + tarea.getIncluirDomingos() + " " + tarea.getIncluirSabados());
+                + tarea.getIncluirDomingos() + " " + tarea.getIncluirSabados() + " " + tarea.getPeriodicidad());
+
         try {
             // Llamamos al servicio para asignar la tarea y obtener el mensaje de éxito
             String mensaje = asginarTareasService.asignarTareaConDetalles(tarea);
@@ -165,8 +183,8 @@ public class TareasController {
         }
     }
 
-    //metodo para eliminar una tarea
+    // metodo para eliminar una tarea
     // @DeleteMapping("/elminarTarea{idTarea}")
-    // public 
+    // public
 
 }

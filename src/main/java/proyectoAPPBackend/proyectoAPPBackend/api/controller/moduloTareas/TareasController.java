@@ -90,6 +90,8 @@ public class TareasController {
 
     @PostMapping("/asignarTarea")
     public ResponseEntity<?> asignarTarea(@RequestBody AsignarTareasDTO tarea) {
+        System.out.println(tarea.getIdTarea() + " " + tarea.getIdUsuario() + " " + tarea.getFechaInicio() + " "
+                + tarea.getIncluirDomingos() + " " + tarea.getIncluirSabados());
         try {
             // Llamamos al servicio para asignar la tarea y obtener el mensaje de éxito
             String mensaje = asginarTareasService.asignarTareaConDetalles(tarea);

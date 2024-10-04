@@ -17,10 +17,12 @@ import proyectoAPPBackend.proyectoAPPBackend.api.ModelosDTO.modelosDTOVenta.Vent
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloProductosAlmacen.Producto;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloVentas.DetalleVenta;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloVentas.Venta;
+import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloCargaCamion.CargarCamionRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloPedido.PedidoRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloProductosAlmacen.ProductoRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.repository.moduloVentas.VentaRepository;
 import proyectoAPPBackend.proyectoAPPBackend.api.service.moduloCargaCamion.CargarCamionService;
+import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloCargaCamion.CargarCamion;
 import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloPedido.Pedido;
 
 @Service
@@ -38,6 +40,10 @@ public class VentaService {
 
     @Autowired
     PedidoRepository pedidoRepository;
+
+    @Autowired
+    CargarCamionRepository cargarCamionRepository;
+
 
     // meto para listar los usuarios por el rol de cliente o por rol generico
     public List<VentaListaUsuariosDTO> listarUsuariosPorRolVenta(int valor) {
@@ -75,31 +81,33 @@ public class VentaService {
     }
 
     // Metodo para generar el detalle de la venta
-        public List<DetalleVenta> generarDetalleVenta(Venta venta, List<DetalleVentaDTO> listaDetalleVenta) {
+    public List<DetalleVenta> generarDetalleVenta(Venta venta, List<DetalleVentaDTO> listaDetalleVenta) {
         List<DetalleVenta> detalleVenta = new ArrayList<>();
         Map<Long, Integer> totalPorProducto = new HashMap<>(); // Almacena la suma de cantidades por producto
         List<String> productosSinExistencias = new ArrayList<>();
-    
+
         // Sumar las cantidades por cada producto en la lista
         for (DetalleVentaDTO detalleDTO : listaDetalleVenta) {
             Long idProducto = (long) detalleDTO.getIdProducto(); // Convertir int a Long
             totalPorProducto.put(idProducto, totalPorProducto.getOrDefault(idProducto, 0) + detalleDTO.getCantidad());
         }
-    
-        // Verificar si la cantidad total para cada producto excede la cantidad disponible
+
+        // Verificar si la cantidad total para cada producto excede la cantidad
+        // disponible
         for (DetalleVentaDTO detalleDTO : listaDetalleVenta) {
             Producto producto = productoRepository.findById(detalleDTO.getIdProducto()) // Convertir int a Long
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-    
+
             Long idProducto = (long) detalleDTO.getIdProducto(); // Convertir int a Long
             Integer cantidadTotalSolicitada = totalPorProducto.get(idProducto);
-    
+
             // Convertir Long e Integer a int antes de llamar al método
             int idProductoInt = idProducto.intValue();
             int cantidadTotalSolicitadaInt = cantidadTotalSolicitada;
-    
+
             // Verificar la cantidad disponible con la cantidad total acumulada
-            if (ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), idProductoInt, cantidadTotalSolicitadaInt)) {
+            if (ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), idProductoInt,
+                    cantidadTotalSolicitadaInt)) {
                 DetalleVenta detalle = new DetalleVenta();
                 detalle.setVenta(venta);
                 detalle.setProducto(producto);
@@ -110,129 +118,66 @@ public class VentaService {
                 productosSinExistencias.add(producto.getNombre());
             }
         }
-    
-        // Si hay productos sin existencias suficientes, lanzar una excepción con la lista de nombres
+
+        // Si hay productos sin existencias suficientes, lanzar una excepción con la
+        // lista de nombres
         if (!productosSinExistencias.isEmpty()) {
             throw new RuntimeException(
-                    "No hay existencias suficientes para los siguientes productos: " + String.join(", ", productosSinExistencias));
+                    "No hay existencias suficientes para los siguientes productos: "
+                            + String.join(", ", productosSinExistencias));
         }
-    
+
         return detalleVenta;
     }
-
-
-    // public List<DetalleVenta> generarDetalleVenta(Venta venta, List<DetalleVentaDTO> listaDetalleVenta) {
-    //     List<DetalleVenta> detalleVenta = new ArrayList<>();
-
-    //     // Producto verificarProducto =
-    //     // productoRepository.findById(listaDetalleVenta.get(0).getIdProducto())
-    //     // .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-    //     for (DetalleVentaDTO detalleDTO : listaDetalleVenta) {
-    //         // Obtener el producto por ID una sola vez
-    //         Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
-    //                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-            
-    //         if (ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), detalleDTO.getIdProducto(),
-    //                 detalleDTO.getCantidad())) {
-    //             DetalleVenta detalle = new DetalleVenta();
-    //             detalle.setVenta(venta);
-    //             System.out.println(detalleDTO.getIdProducto());
-
-    //             detalle.setProducto(producto);
-    //             detalle.setCantidad(detalleDTO.getCantidad());
-    //             detalle.setPrecio(producto.getPrecio());
-
-    //             detalleVenta.add(detalle);
-    //         } else {
-    //             throw new RuntimeException(
-    //                     "No hay existencias suficientes del producto: " + producto.getNombre());
-    //         }
-
-    //     }
-    //     return detalleVenta;
-    // }
 
     public List<DetalleVenta> generarDetalleVentaPedido(Venta venta, List<DetalleVentaPedidoDTO> listaDetalleVenta) {
         List<DetalleVenta> detalleVenta = new ArrayList<>();
         Map<Long, Integer> totalPorProducto = new HashMap<>(); // Almacena la suma de cantidades por producto
         List<String> productosSinExistencias = new ArrayList<>();
-    
+
         // Sumar las cantidades por cada producto en la lista
         for (DetalleVentaPedidoDTO detalleDTO : listaDetalleVenta) {
             Long idProducto = (long) detalleDTO.getIdProducto(); // Asegurarse de que sea Long
             totalPorProducto.put(idProducto, totalPorProducto.getOrDefault(idProducto, 0) + detalleDTO.getCantidad());
         }
-    
-        // Verificar si la cantidad total para cada producto excede la cantidad disponible
+
+        // Verificar si la cantidad total para cada producto excede la cantidad
+        // disponible
         for (DetalleVentaPedidoDTO detalleDTO : listaDetalleVenta) {
             Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
                     .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-    
+
             Long idProducto = (long) detalleDTO.getIdProducto();
             Integer cantidadTotalSolicitada = totalPorProducto.get(idProducto);
 
             int idProductoInt = idProducto.intValue();
             int cantidadTotalSolicitadaInt = cantidadTotalSolicitada;
-    
+
             // Verificar las existencias basadas en la cantidad total acumulada
-            if (ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), idProductoInt, cantidadTotalSolicitadaInt)) {
+            if (ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), idProductoInt,
+                    cantidadTotalSolicitadaInt)) {
                 DetalleVenta detalle = new DetalleVenta();
                 detalle.setVenta(venta);
                 detalle.setProducto(producto);
                 detalle.setCantidad(detalleDTO.getCantidad()); // Solo se añade la cantidad específica de este detalle
                 detalle.setPrecio(producto.getPrecio());
-    
+
                 detalleVenta.add(detalle);
             } else {
                 productosSinExistencias.add(producto.getNombre());
             }
         }
-    
-        // Si hay productos sin existencias suficientes, lanzar una excepción con la lista de nombres
+
+        // Si hay productos sin existencias suficientes, lanzar una excepción con la
+        // lista de nombres
         if (!productosSinExistencias.isEmpty()) {
             throw new RuntimeException(
-                    "No hay existencias suficientes para los siguientes productos: " + String.join(", ", productosSinExistencias));
+                    "No hay existencias suficientes para los siguientes productos: "
+                            + String.join(", ", productosSinExistencias));
         }
-    
+
         return detalleVenta;
     }
-    
-
-    // public List<DetalleVenta> generarDetalleVentaPedido(Venta venta, List<DetalleVentaPedidoDTO> listaDetalleVenta) {
-    //     List<DetalleVenta> detalleVenta = new ArrayList<>();
-
-    //     Producto verificarProducto = productoRepository.findById(listaDetalleVenta.get(0).getIdProducto())
-    //             .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-    //     for (DetalleVentaPedidoDTO detalleDTO : listaDetalleVenta) {
-    //         System.out.println("Producto: " + detalleDTO.getCantidad());
-
-    //         // Obtener el producto por ID para verificar el nombre en caso de error
-    //         Producto producto = productoRepository.findById(detalleDTO.getIdProducto())
-    //                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-
-    //         System.out.println("Nombre: " + producto.getNombre() + ", IdRepartidor: " + detalleDTO.getIdRepartidor()
-    //                 + ", IdProducto: " + detalleDTO.getIdProducto() + ", Cantidad: " + detalleDTO.getCantidad());
-
-    //         // Verificar las existencias
-    //         if (ventaRepository.verificarExistenciasRepartidor(detalleDTO.getIdRepartidor(), detalleDTO.getIdProducto(),
-    //                 detalleDTO.getCantidad())) {
-    //             DetalleVenta detalle = new DetalleVenta();
-    //             detalle.setVenta(venta);
-    //             detalle.setProducto(producto);
-    //             detalle.setCantidad(detalleDTO.getCantidad());
-    //             detalle.setPrecio(producto.getPrecio());
-
-    //             detalleVenta.add(detalle);
-    //         } else {
-    //             // Lanzar excepción con el nombre del producto que no tiene existencias
-    //             throw new RuntimeException("No hay existencias suficientes del producto: " + producto.getNombre());
-    //         }
-    //     }
-
-    //     return detalleVenta;
-    // }
 
     // metodo para genera la venta
     public Venta generarVenta(List<DetalleVentaDTO> detalleVenta) {
@@ -241,6 +186,10 @@ public class VentaService {
         venta.setCliente(cargarCamionService.buscarUsuarioPorId(detalleVenta.get(0).getIdCliente()));
         venta.setFechaVenta(detalleVenta.get(0).getFechaVenta());
         venta.setTotalVenta(detalleVenta.get(0).getTotalVenta());
+
+        //CargarCamion cargarCamion = cargarCamionService.buscarCargarCamionPorId(detalleVenta.get(0).getIdCargarCamion());
+        venta.setCargarCamion(cargarCamionRepository.findByUsuarioIdAndCompletadoFalse((long) detalleVenta.get(0).getIdRepartidor()));
+
         List<DetalleVenta> detalles = generarDetalleVenta(venta, detalleVenta);
         venta.setDetalles(detalles);
         return ventaRepository.save(venta);
@@ -254,6 +203,7 @@ public class VentaService {
         venta.setCliente(cargarCamionService.buscarUsuarioPorId(detalleVenta.get(0).getIdCliente()));
         venta.setFechaVenta(detalleVenta.get(0).getFechaVenta());
         venta.setTotalVenta(detalleVenta.get(0).getTotalVenta());
+        venta.setCargarCamion(cargarCamionRepository.findByUsuarioIdAndCompletadoFalse((long) detalleVenta.get(0).getIdRepartidor()));
         List<DetalleVenta> detalles = generarDetalleVentaPedido(venta, detalleVenta);
         venta.setDetalles(detalles);
         cambiarEstadoPedidoEntregado(detalleVenta.get(0).getIdPedido());

@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import proyectoAPPBackend.proyectoAPPBackend.api.modelos.moduloCargaCamion.CargarCamion;
 import proyectoAPPBackend.proyectoAPPBackend.security.entity.Usuario;
 
 @Entity
@@ -42,4 +43,8 @@ public class Venta {
 
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
     private List<DetalleVenta> detalles;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "idCargarCamion")
+    private CargarCamion cargarCamion;
 }

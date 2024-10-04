@@ -25,5 +25,7 @@ public interface CargarCamionRepository extends JpaRepository<CargarCamion, Inte
      @Query(value = "CALL sp_ObtenerResumenCarga(:idUsuario)", nativeQuery = true)
      List<Object[]> obtenerResumenCarga(int idUsuario);
 
+     CargarCamion findByUsuarioIdAndCompletadoFalse(Long idUsuario);
+
 
 }

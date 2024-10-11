@@ -65,13 +65,35 @@ public class TareasService {
     }
 
     // metodo para modificar una tarea
+    // public void modificarTarea(Tareas tarea) {
+    //     // verificar si el color de la tarea ya existe
+    //     if (tareasRepository.findByColor(tarea.getColor()) != null) {
+    //         throw new RuntimeException("El color de la tarea ya existe");
+    //     } else {
+    //         tareasRepository.save(tarea);
+    //     }
+    // }
+
     public void modificarTarea(Tareas tarea) {
-        // verificar si el color de la tarea ya existe
-        if (tareasRepository.findByColor(tarea.getColor()) != null) {
-            throw new RuntimeException("El color de la tarea ya existe");
-        } else {
-            tareasRepository.save(tarea);
+        // Obtener la tarea existente por su ID
+        Tareas tareaExistente = tareasRepository.findById(tarea.getIdTarea()).orElseThrow(() -> new RuntimeException("Tarea no encontrada"));
+    
+        // Verificar si el color de la tarea ya existe en otra tarea
+        Tareas tareaConMismoColor = tareasRepository.findByColor(tarea.getColor());
+        if (tareaConMismoColor != null && tareaConMismoColor.getIdTarea() != tarea.getIdTarea()) {
+            // Si el color ya existe en otra tarea, mantener el color existente
+            tarea.setColor(tareaExistente.getColor());
         }
+
+        System.out.println("Tarea: " + tarea);
+    
+        // Actualizar otros atributos de la tarea existente
+        tareaExistente.setNombre(tarea.getNombre());
+        tareaExistente.setDescripcion(tarea.getDescripcion());
+        tareaExistente.setColor(tarea.getColor());
+    
+        // Guardar la tarea modificada
+        tareasRepository.save(tareaExistente);
     }
 
 }
